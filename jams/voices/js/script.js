@@ -10,20 +10,16 @@ let recognizer = new p5.SpeechRec();
 
 const COMMANDS = [
     {
-      "command": /go (.*)/, 
-      "callback": moving
+      "command": /(.*) (.*)/, 
+      "callback": actionDirection
     },
     {
-      "command": /move (.*) by (.*)/,
-      "callback": moving
+      "command": /(.*) (.*) (.*)/,
+      "callback": actionSpaces
     },
     {
-      "command": /look to your (.*)/,
-      "callback": looking
-    },
-    {
-      "command": /whats in front of you/,
-      "callback": speaking
+      "command": /(.*)/,
+      "callback": actionResponse
     }
 ];
 
@@ -53,7 +49,7 @@ let world = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] //16
 ]
 
-//p5js setup
+//p5js setup 
 function setup() {
     player = new Player((7 * TILE_SIZE), 0);
 
@@ -82,8 +78,8 @@ function createWalls() {
     }
 }
 
-
-//draw maze & check player movement & check talking
+//p5js draw
+//draw maze & check player movement
 function draw() {
     background(255);
 
@@ -94,13 +90,15 @@ function draw() {
     player.move();
 }
 
+//voice recognizer result function
 function talking() {
     if (recognizer.resultValue && !player.moving) {
+        //set text to all lowercase and punctuation free
+        let spoken = recognizer.resultString.toLowerCase().replace(/[\.',?!]/g, '');
+        console.log(spoken);
+
         for(let command of COMMANDS) {
-            //set text to all lowercase and punctuation free
-            let spoken = recognizer.resultString.toLowerCase().replace(/[\.',?!]/g, '');
             let match = spoken.match(command.command);
-            console.log(spoken);
             console.log(match);
 
             if (match != null && match.length > 1) {
@@ -110,6 +108,37 @@ function talking() {
     }
 }
 
+//which takes one action [1] and a direction [2]
+//actions: move, look
+//directions: left, right, up, down
+function actionDirection(data) {
+
+}
+
+//which takes action [1], amount of spaces [2], and direction [3]
+//action can only be move, spaces can be 1 to 5
+function actionSpaces(data) {
+
+}
+
+//all other actions thrown in here to have them all in one place
+//actions which request a spoken response and/or item interaction
+//what is blocking player, player picks up item, player uses item
+function actionResponse(data) {
+    if(blocking != null) {
+        switch(data[1]) {
+            case 'whats in front of you': case 'what do you see': case 'whats blocking you':
+                voice.speak(`There is a ${blocking.name} in front of me.`);
+            break;
+            case 'pick up the key': case 'can you pick it up': case 'pick it up':
+                if(blocking.name == 'key') player.pickUp(blocking);
+                else voice.speak(`I can't pick that up.`);
+            break;
+        }
+    }
+}
+
+//reuse these for functions above
 function moving(data) {
     let direction = data[1];
     switch(direction) {
@@ -138,10 +167,6 @@ function looking(data) {
             voice.speak(`I cannot look that way.`);
         break;
     }
-}
-
-function speaking() {
-    voice.speak(`There is a ${blocking.name} in front of me.`);
 }
 
 function mousePressed() {

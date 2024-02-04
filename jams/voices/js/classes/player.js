@@ -6,6 +6,7 @@ class Player {
         this.moving = false;
         this.facing = 'down';
         this.distance = null;
+        this.holding = [];
         this.speed = 5;
     }
 
@@ -77,9 +78,13 @@ class Player {
         return true;
     }
 
+    pickUp() {
+        print('picking up item');
+    }
+
     display() {
         push();
-        fill(250, 200, 220);
+        fill(250, 90, 90);
         noStroke();
         ellipseMode(CORNER);
         ellipse(this.x, this.y, this.size);
