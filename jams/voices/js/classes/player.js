@@ -2,9 +2,10 @@ class Player {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = 50;
+        this.size = TILE_SIZE;
         this.moving = false;
-        this.facing = 'up';
+        this.facing = 'down';
+        this.distance = null;
         this.speed = 5;
     }
 
@@ -34,35 +35,53 @@ class Player {
     //returns false if it has any obstacle in front of it, depending on which angle it is facing
     //otherwise returns true to being able to move
     canMove() {
-        for(let obs of obstacles) {
-            switch(this.facing) {
-                case 'up': case 'down':
-                    if(this.x > obs.x - obs.width/2 && this.x < obs.x + obs.width/2
-                    && this.y + this.size/2 > obs.y - obs.height/2 
-                    && this.y - this.size/2 < obs.y + obs.height/2) {
-                        blocking = obs;
-                        return false;
-                    }
-                break;
+        let povX, povY;
 
-                case 'left': case 'right':
-                    if(this.y > obs.y - obs.height/2 && this.y < obs.y + obs.height/2
-                    && this.x + this.size/2 > obs.x - obs.width/2 
-                    && this.x - this.size/2 < obs.x + obs.width/2) {
-                        blocking = obs;
-                        return false;
-                    }
-                break;
+        switch(this.facing) {
+            case 'left':
+                povX = player.x - TILE_SIZE;
+                povY = player.y;
+            break;
+            case 'right':
+                povX = player.x + TILE_SIZE;
+                povY = player.y;
+            break;
+            case 'up':
+                povX = player.x;
+                povY = player.y - TILE_SIZE;
+            break;
+            case 'down':
+                povX = player.x;
+                povY = player.y + TILE_SIZE;
+            break;
+        }
+
+        for(let obs of obstacles) {
+            if(obs.x == povX && obs.y == povY) {
+                blocking = obs;
+                return false;
             }
         }
+
+        if(this.distance != null) {
+            if(this.distance == 0) {
+                this.distance = null;
+                return false;
+            }
+
+            this.distance -= this.speed;
+            print(this.distance);
+        }
+
+
         return true;
     }
 
     display() {
         push();
         fill(250, 200, 220);
-        stroke(0);
-        ellipseMode(CENTER);
+        noStroke();
+        ellipseMode(CORNER);
         ellipse(this.x, this.y, this.size);
         pop();
     }
