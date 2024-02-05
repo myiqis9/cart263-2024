@@ -7,14 +7,16 @@ Speech library jam
 const TILE_SIZE = 30;
 let voice = new p5.Speech();
 let recognizer = new p5.SpeechRec();
+let transcript = 'Give me instructions to help me escape this maze!';
 
+//commands for voice recognition
 const COMMANDS = [
     {
       "command": /(.*) (.*)/, 
       "callback": actionDirection
     },
     {
-      "command": /(.*) (.*) (.*)/,
+      "command": /(.*) (.*) (.*) (.*)/,
       "callback": actionSpaces
     },
     {
@@ -22,6 +24,12 @@ const COMMANDS = [
       "callback": actionResponse
     }
 ];
+
+//numbers written out because voice recognition hates me
+const NUMBERS = {
+    'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9
+};
+//thank you Pippin and Lee for the idea!
 
 let player; //player AI character
 let obstacles = []; //array of all obstacles in the maze
@@ -53,14 +61,18 @@ let world = [
 function setup() {
     player = new Player((7 * TILE_SIZE), 0);
 
-    let canvasHeight = (world.length) * TILE_SIZE;
-    let canvasWidth = (world[0].length) * TILE_SIZE;
+    let canvasHeight = world.length * TILE_SIZE;
+    let canvasWidth = (world[0].length * TILE_SIZE) + 60;
     createCanvas(canvasHeight, canvasWidth);
     createWalls();
 
     recognizer.continuous = true;
-    recognizer.onResult = talking;
+    recognizer.onResult = voiceResult;
     recognizer.start();
+
+    voice.setVoice(`Microsoft Aria Online (Natural) - English (United States)`);
+    voice.setRate(1.5);
+    voice.setPitch(0.6);
 }
 
 function createWalls() {
@@ -82,16 +94,13 @@ function createWalls() {
 //draw maze & check player movement
 function draw() {
     background(255);
-
-    for(let obs of obstacles) {
-        obs.display();
-        obs.checkDistance();
-    }
+    for(let obs of obstacles) obs.display();
     player.move();
+    displayText();
 }
 
 //voice recognizer result function
-function talking() {
+function voiceResult() {
     if (recognizer.resultValue && !player.moving) {
         //set text to all lowercase and punctuation free
         let spoken = recognizer.resultString.toLowerCase().replace(/[\.',?!]/g, '');
@@ -112,63 +121,97 @@ function talking() {
 //actions: move, look
 //directions: left, right, up, down
 function actionDirection(data) {
-
+    switch(data[1]) {
+        case 'go': case 'move': case 'go to the': case 'move to the':
+            moving(data[2], 0);
+        break;
+        case 'look to your': case 'look': case 'turn': case 'turn to your':
+            looking(data[2]);
+        break;
+    }
 }
 
-//which takes action [1], amount of spaces [2], and direction [3]
-//action can only be move, spaces can be 1 to 5
+//which takes action [1], amount of spaces [2], word 'space' or 'spaces' [3], and direction [4]
+//action can only be move, spaces can be 1 to 9
 function actionSpaces(data) {
+    if((data[1] == 'move' || data[1] == 'go') && (data[3] == 'space' || data[3] == 'spaces')) {
+        let distance = null;
 
+        //checks if parsed data would return as a number or not
+        if(!isNaN(parseInt(data[2]))) distance = parseInt(data[2]);
+        else distance = NUMBERS[data[2]];
+
+        //if distance isn't still null after checking both options, move that distance
+        print(distance);
+        if(distance !== null) moving(data[4], distance);
+    }
 }
 
 //all other actions thrown in here to have them all in one place
 //actions which request a spoken response and/or item interaction
 //what is blocking player, player picks up item, player uses item
 function actionResponse(data) {
-    if(blocking != null) {
-        switch(data[1]) {
-            case 'whats in front of you': case 'what do you see': case 'whats blocking you':
-                voice.speak(`There is a ${blocking.name} in front of me.`);
-            break;
-            case 'pick up the key': case 'can you pick it up': case 'pick it up':
-                if(blocking.name == 'key') player.pickUp(blocking);
-                else voice.speak(`I can't pick that up.`);
-            break;
-        }
+    switch(data[1]) {
+        case 'hello': case 'hi':
+            speaking(`Hello, player. Will you help me out of here?`);
+        break;
+        case 'what can you do': case 'what can i ask you': case 'how can i help you':
+            speaking(`I can move or look in any direction. You can specify \nhow many spaces I should move. I can also pick up items.`);
+        break;
+        case 'whats in front of you': case 'what do you see': case 'whats blocking you':
+            if(blocking != null) speaking(`There is a ${blocking.name} in front of me.`);
+            else speaking(`There is nothing in front of me.`);
+        break;
+        case 'pick up the key': case 'can you pick it up': case 'pick it up':
+            if(blocking != null && blocking.name == 'key') player.pickUp(blocking);
+            else speaking(`I can't pick that up.`);
+        break;
     }
 }
 
 //reuse these for functions above
-function moving(data) {
-    let direction = data[1];
+function moving(direction, distance) {
     switch(direction) {
         case 'left': case 'right': case 'down': case 'up':
             player.facing = direction;
             player.moving = true;
-            if(data.length > 2) player.distance = (parseInt(data[2]) * TILE_SIZE);
+            if(distance > 0) player.distance = (distance * TILE_SIZE);
         break;
         case 'forward':
             player.moving = true;
-            if(data.length > 2) player.distance = (parseInt(data[2]) * TILE_SIZE);
+            if(distance > 0) player.distance = (distance * TILE_SIZE);
         break;
         default:
-            voice.speak(`I cannot go that way.`);
+            speaking(`I cannot go that way.`);
         break;
     }
 }
 
-function looking(data) {
-    let direction = data[1];
+function looking(direction) {
     switch(direction) {
         case 'left': case 'right': case 'down': case 'up':
             player.facing = direction;
+            player.checkObstacle();
         break;
         default:
-            voice.speak(`I cannot look that way.`);
+            speaking(`I cannot look that way.`);
         break;
     }
 }
 
+function speaking(text) {
+    voice.speak(text);
+    transcript = text;
+}
+
+function displayText() {
+    push();
+    textAlign(CENTER, TOP);
+    textSize(18);
+    text(transcript, width/2, height-48);
+    pop();
+}
+
 function mousePressed() {
-    
+    //voice.listVoices();
 }

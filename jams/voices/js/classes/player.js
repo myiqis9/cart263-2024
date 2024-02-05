@@ -33,11 +33,30 @@ class Player {
         this.display();
     }
 
-    //returns false if it has any obstacle in front of it, depending on which angle it is facing
+    //returns false if it has any obstacle in front of it,
     //otherwise returns true to being able to move
     canMove() {
+        if(this.checkObstacle()) return false;
+
+        //has player moved specified distance?
+        if(this.distance != null) {
+            if(this.distance == 0) {
+                this.distance = null;
+                return false;
+            }
+            //print(this.distance);
+            this.distance -= this.speed;
+        }
+
+        //player can move
+        return true;
+    }
+
+    //checks if there's an obstacle in front of player and sets it as 'blocking' value
+    checkObstacle() {
         let povX, povY;
 
+        //checking where obstacle would be depending on where player is facing
         switch(this.facing) {
             case 'left':
                 povX = player.x - TILE_SIZE;
@@ -57,31 +76,23 @@ class Player {
             break;
         }
 
+        //is there obstacle blocking movement?
         for(let obs of obstacles) {
             if(obs.x == povX && obs.y == povY) {
                 blocking = obs;
-                return false;
+                return true;
             }
         }
 
-        if(this.distance != null) {
-            if(this.distance == 0) {
-                this.distance = null;
-                return false;
-            }
-
-            this.distance -= this.speed;
-            print(this.distance);
-        }
-
-
-        return true;
+        blocking = null; 
+        return false; //no obstacle 
     }
 
     pickUp() {
         print('picking up item');
     }
 
+    //display player
     display() {
         push();
         fill(250, 90, 90);
