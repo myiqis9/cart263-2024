@@ -8,7 +8,7 @@ class Player {
         this.distance = null;
         this.holding = [];
         this.speed = 5;
-        this.color = 'blue';
+        this.color = 'yellow';
     }
 
     move() {
@@ -110,9 +110,11 @@ class Player {
     display() {
         push();
         fill(COLORS[this.color][0], COLORS[this.color][1], COLORS[this.color][2]);
-        noStroke();
-        ellipseMode(CORNER);
-        ellipse(this.x, this.y, this.size);
+        strokeWeight(2);
+        if(this.facing == 'left') triangle(this.x, this.y + this.size/2, this.x + this.size, this.y + this.size, this.x + this.size, this.y);
+        else if(this.facing == 'right') triangle(this.x, this.y, this.x, this.y + this.size, this.x + this.size, this.y + this.size/2);
+        else if(this.facing == 'up') triangle(this.x, this.y + this.size, this.x + this.size/2, this.y, this.x + this.size, this.y + this.size);
+        else if(this.facing == 'down') triangle(this.x, this.y, this.x + this.size/2, this.y + this.size, this.x + this.size, this.y);
         pop();
     }
 }

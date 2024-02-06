@@ -33,7 +33,7 @@ const NUMBERS = {
 
 //colors for consistency
 const COLORS = {
-    'red': [250, 70, 70], 'green': [70, 250, 70], 'blue': [70, 70, 250]
+    'red': [250, 70, 70], 'green': [70, 250, 70], 'blue': [70, 70, 250], 'yellow': [250, 210, 70]
 }
 
 let player; //player AI character
@@ -172,13 +172,13 @@ function actionSpaces(data) {
 function actionResponse(data) {
     switch(data[1]) {
         case 'hello': case 'hi':
-            speaking(`Hello, player. Will you help me out of here?`);
+            speaking(`Hello, player. I need your help to get out of here.`);
         break;
         case 'what can you do': case 'what can i ask you': case 'how can i help you':
             speaking(`I can move or look in any direction. You can specify \nhow many spaces I should move. I can also pick up items.`);
         break;
         case 'whats in front of you': case 'what do you see': case 'whats blocking you':
-            if(blocking != null) speaking(`There is a ${blocking.name} in front of me.`);
+            if(blocking != null) speaking(`There is a ${blocking.String()} in front of me.`);
             else speaking(`There is nothing in front of me.`);
         break;
         case 'pick up the key': case 'can you pick it up': case 'pick it up':
@@ -188,6 +188,12 @@ function actionResponse(data) {
         case 'open the door': case 'can you open the door': case 'can you open it': case 'open it':
             if(blocking != null && blocking.name == 'door' && player.unlock(blocking)) speaking(`I opened the door!`);
             else speaking(`I can't open this.`);
+        break;
+        case 'how many keys do you have': case 'whats in your inventory': case 'what items do you have': case 'which keys do you have':
+            let inv = player.holding.join(", ");
+            print(inv);
+            if(inv != '') speaking(`I have the following keys on me: ${inv}.`);
+            else speaking(`I don't have any keys on me.`);
         break;
     }
 }

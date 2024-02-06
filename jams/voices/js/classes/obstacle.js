@@ -9,4 +9,8 @@ class Obstacle {
     display() {
 
     }
+
+    String() {
+        return this.name;
+    }
 }

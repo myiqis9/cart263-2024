@@ -13,4 +13,8 @@ class Door extends Obstacle {
         rect(this.x, this.y, this.size);
         pop();
     }
+
+    String() {
+        return `${this.color} ${this.name}`;
+    }
 }
