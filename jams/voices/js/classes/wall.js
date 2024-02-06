@@ -7,9 +7,11 @@ class Wall extends Obstacle {
     //display wall
     display() {
         push();
-        fill(0);
-        noStroke();
-        rect(this.x, this.y, this.size);
+        if(this.visible) {
+            fill(0);
+            noStroke();
+            rect(this.x, this.y, this.size);
+        }
         pop();
     }
 }

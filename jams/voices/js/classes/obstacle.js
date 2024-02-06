@@ -4,13 +4,14 @@ class Obstacle {
         this.x = x;
         this.y = y;
         this.size = TILE_SIZE;
-    }
-
-    display() {
-
+        this.visible = false;
     }
 
     String() {
         return this.name;
+    }
+
+    makeVisible() {
+        this.visible = true;
     }
 }

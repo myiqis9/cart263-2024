@@ -80,6 +80,12 @@ class Player {
         //is there obstacle blocking movement?
         for(let obs of obstacles) {
             if(obs.x == povX && obs.y == povY) {
+                //has player reached the exit?
+                if(obs.name === 'exit') {
+                    state = 'win'; //game won!
+                    return false;
+                }
+
                 blocking = obs;
                 return true;
             }
@@ -89,12 +95,17 @@ class Player {
         return false; //no obstacle 
     }
 
+    //pick up key, adds key as color string value inside holding[]
+    //then removes key from obstacles, so it no longer displays
     pickup(obj) {
         this.holding.push(obj.color);
         speaking(`I picked up a ${obj.color} key.`);
         obstacles.splice(obstacles.indexOf(obj), 1);
     }
 
+    //unlock door
+    //checking if holding[] contains matching color key to door
+    //if so, remove key from inventory and door from obstacles
     unlock(obj) {
         for(let key of this.holding) {
             if(obj.color == key) {
@@ -106,7 +117,6 @@ class Player {
         return false;
     }
 
-    //display player
     display() {
         push();
         fill(COLORS[this.color][0], COLORS[this.color][1], COLORS[this.color][2]);

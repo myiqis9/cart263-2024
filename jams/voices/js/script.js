@@ -4,7 +4,9 @@ Speech library jam
 */
 
 "use strict";
-const TILE_SIZE = 30;
+let state = 'title'; //game state
+
+//p5 speech variables
 let voice = new p5.Speech();
 let recognizer = new p5.SpeechRec();
 let transcript = 'Give me instructions to help me escape this maze!';
@@ -36,23 +38,30 @@ const COLORS = {
     'red': [250, 70, 70], 'green': [70, 250, 70], 'blue': [70, 70, 250], 'yellow': [250, 210, 70]
 }
 
-let player; //player AI character
+//array randomizer
+const SORT = (array) => { 
+    return array.sort(() => random() - 0.5); 
+};
+//thanks Pippin for the help!
+
+let player; //player character you communicate with
 let obstacles = []; //array of all obstacles in the maze
 let blocking = null; //object blocking player
+const TILE_SIZE = 30; //tile size
 
 //maze generated from https://keesiemeijer.github.io/maze-generator/
 //original generated maze can be found in assets/images/maze-noted.png - I transcribed it below :)
 let world = [
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //1
-    [1,0,0,0,0,0,0,0,1,0,0,0,1,3,0,0,0,0,0,0,1], //2
-    [1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1], //3
-    [1,0,1,3,1,0,1,0,0,0,2,0,0,0,0,0,0,0,1,0,1], //4
-    [1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1], //5
-    [1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1], //6
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //0
+    [1,0,0,0,0,0,0,0,1,0,0,0,1,3,0,0,0,0,0,0,1], //1
+    [1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1], //2
+    [1,0,1,3,1,0,1,0,0,0,2,0,0,0,0,0,0,0,1,0,1], //3
+    [1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1], //4
+    [1,0,0,0,1,0,0,0,1,3,1,0,0,0,0,0,0,0,0,0,1], //5
     [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,2,1], //6
     [1,0,0,0,1,3,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1], //7
     [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1], //8
-    [1,0,0,0,0,0,1,0,0,0,2,0,0,0,1,0,0,0,1,0,0], //9
+    [1,0,0,0,0,0,1,0,0,0,2,0,0,0,1,0,0,0,1,0,4], //9
     [1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1], //10
     [1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1], //11
     [1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,2,1], //12
@@ -64,17 +73,19 @@ let world = [
 
 //p5js setup 
 function setup() {
-    player = new Player(TILE_SIZE, TILE_SIZE);
+    player = new Player(TILE_SIZE, TILE_SIZE); //player spawns in top left corner
 
-    let canvasHeight = world.length * TILE_SIZE;
-    let canvasWidth = (world[0].length * TILE_SIZE) + 60;
-    createCanvas(canvasHeight, canvasWidth);
-    createWalls();
+    //create world based on size of the 2d array
+    let canvasHeight = (world.length * TILE_SIZE) + 60;
+    let canvasWidth = world[0].length * TILE_SIZE;
+    createCanvas(canvasWidth, canvasHeight);
+    createMaze();
 
     recognizer.continuous = true;
     recognizer.onResult = voiceResult;
     recognizer.start();
 
+    //funny voice settings
     voice.setVoice(`Microsoft Aria Online (Natural) - English (United States)`);
     voice.setRate(1.5);
     voice.setPitch(0.6);
@@ -86,23 +97,36 @@ function setup() {
 * 1 - wall
 * 2 - door
 * 3 - key
+* 4 - exit
 * wall/key locations marked on maze-solved.png
 */
-function createWalls() {
+function createMaze() {
+    //arry of potential colors for doors and keys
+    let doorColors = ['red', 'red', 'blue', 'blue', 'green', 'green'];
+    let keyColors = ['red', 'red', 'blue', 'blue', 'green', 'green'];
+
+    //randomize color order using array.sort()
+    doorColors = SORT(doorColors);
+    keyColors = SORT(keyColors);
+
+    //use 2d array to draw maze spaces
     for (let row = 0; row < world.length; row++) {
         for (let col = 0; col < world[row].length; col++) {
           let tile = world[row][col];
           switch(tile) {
             case 0: //walkable empty space
               break;
-            case 1: let wall = new Wall((row * TILE_SIZE), (col * TILE_SIZE)); //wall
+            case 1: let wall = new Wall((col * TILE_SIZE), (row * TILE_SIZE)); //wall
                 obstacles.push(wall);
               break;
-            case 2: let door = new Door((row * TILE_SIZE), (col * TILE_SIZE), random(['red', 'green', 'blue']));
+            case 2: let door = new Door((col * TILE_SIZE), (row * TILE_SIZE), doorColors.pop()); //door, random color
                 obstacles.push(door);
             break;
-            case 3: let key = new Key((row * TILE_SIZE), (col * TILE_SIZE), random(['red', 'green', 'blue']));
+            case 3: let key = new Key((col * TILE_SIZE), (row * TILE_SIZE), keyColors.pop()); //key, random zolor
                 obstacles.push(key);
+            break;
+            case 4: let exit = new Exit((col * TILE_SIZE), (row * TILE_SIZE)); //exit
+            obstacles.push(exit);
             break;
           }
         }
@@ -110,17 +134,35 @@ function createWalls() {
 }
 
 //p5js draw
-//draw maze & check player movement
+//checks state of game
 function draw() {
+    if(state == 'title') title();
+    else if (state == 'game') game();
+    else if (state == 'win') win();
+}
+
+//title screen
+function title() {
+    background(255);
+}
+
+//game screen
+//draw maze & check player movement
+function game() {
     background(255);
     for(let obs of obstacles) obs.display();
     player.move();
     displayText();
 }
 
+//win screen
+function win() {
+    print('You won the game!!!');
+}
+
 //voice recognizer result function
 function voiceResult() {
-    if (recognizer.resultValue && !player.moving) {
+    if (recognizer.resultValue && state == 'game' && !player.moving) {
         //set text to all lowercase and punctuation free
         let spoken = recognizer.resultString.toLowerCase().replace(/[\.',?!]/g, '');
         console.log(spoken);
@@ -174,11 +216,14 @@ function actionResponse(data) {
         case 'hello': case 'hi':
             speaking(`Hello, player. I need your help to get out of here.`);
         break;
-        case 'what can you do': case 'what can i ask you': case 'how can i help you':
-            speaking(`I can move or look in any direction. You can specify \nhow many spaces I should move. I can also pick up items.`);
+        case 'what can you do': case 'what can i ask you': case 'how can i help':
+            speaking(`I can move or look in any direction. You can specify how many spaces \nI should move. I can tell you what I see in front of me. I can also pick up items.`);
         break;
         case 'whats in front of you': case 'what do you see': case 'whats blocking you':
-            if(blocking != null) speaking(`There is a ${blocking.String()} in front of me.`);
+            if(blocking != null) {
+                speaking(`There is a ${blocking.String()} in front of me.`);
+                blocking.makeVisible();
+            }
             else speaking(`There is nothing in front of me.`);
         break;
         case 'pick up the key': case 'can you pick it up': case 'pick it up':
@@ -198,7 +243,7 @@ function actionResponse(data) {
     }
 }
 
-//reuse these for functions above
+//moves the player
 function moving(direction, distance) {
     switch(direction) {
         case 'left': case 'right': case 'down': case 'up':
@@ -216,6 +261,7 @@ function moving(direction, distance) {
     }
 }
 
+//makes player look in a direction
 function looking(direction) {
     switch(direction) {
         case 'left': case 'right': case 'down': case 'up':
@@ -228,11 +274,13 @@ function looking(direction) {
     }
 }
 
+//player responds to you by voice, and it gets transcribed
 function speaking(text) {
     voice.speak(text);
     transcript = text;
 }
 
+//player voice transcript
 function displayText() {
     push();
     textAlign(CENTER, TOP);
@@ -242,5 +290,5 @@ function displayText() {
 }
 
 function mousePressed() {
-    //voice.listVoices();
+    if(state == 'title') state = 'game';
 }
