@@ -31,35 +31,40 @@ const NUMBERS = {
 };
 //thank you Pippin and Lee for the idea!
 
+//colors for consistency
+const COLORS = {
+    'red': [250, 70, 70], 'green': [70, 250, 70], 'blue': [70, 70, 250]
+}
+
 let player; //player AI character
 let obstacles = []; //array of all obstacles in the maze
 let blocking = null; //object blocking player
 
 //maze generated from https://keesiemeijer.github.io/maze-generator/
-//original generated maze can be found in assets/images - I transcribed it below :)
+//original generated maze can be found in assets/images/maze-noted.png - I transcribed it below :)
 let world = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], //1
-    [1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1], //2
+    [1,0,0,0,0,0,0,0,1,0,0,0,1,3,0,0,0,0,0,0,1], //2
     [1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1], //3
-    [1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1], //4
+    [1,0,1,3,1,0,1,0,0,0,2,0,0,0,0,0,0,0,1,0,1], //4
     [1,0,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1], //5
     [1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1], //6
-    [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1], //6
-    [0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1], //7
+    [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,2,1], //6
+    [1,0,0,0,1,3,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1], //7
     [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1], //8
-    [1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0], //9
+    [1,0,0,0,0,0,1,0,0,0,2,0,0,0,1,0,0,0,1,0,0], //9
     [1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1], //10
     [1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1], //11
-    [1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1], //12
+    [1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,2,1], //12
     [1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1], //13
-    [1,0,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1], //14
-    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,1], //15
+    [1,0,1,1,1,1,1,0,1,1,1,2,1,0,1,0,1,0,1,0,1], //14
+    [1,0,0,0,0,3,1,0,0,0,0,0,0,0,1,0,0,0,1,3,1], //15
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] //16
 ]
 
 //p5js setup 
 function setup() {
-    player = new Player((7 * TILE_SIZE), 0);
+    player = new Player(TILE_SIZE, TILE_SIZE);
 
     let canvasHeight = world.length * TILE_SIZE;
     let canvasWidth = (world[0].length * TILE_SIZE) + 60;
@@ -75,6 +80,14 @@ function setup() {
     voice.setPitch(0.6);
 }
 
+/* 
+* spaces on the map:
+* 0 - walkable
+* 1 - wall
+* 2 - door
+* 3 - key
+* wall/key locations marked on maze-solved.png
+*/
 function createWalls() {
     for (let row = 0; row < world.length; row++) {
         for (let col = 0; col < world[row].length; col++) {
@@ -85,6 +98,12 @@ function createWalls() {
             case 1: let wall = new Wall((row * TILE_SIZE), (col * TILE_SIZE)); //wall
                 obstacles.push(wall);
               break;
+            case 2: let door = new Door((row * TILE_SIZE), (col * TILE_SIZE), random(['red', 'green', 'blue']));
+                obstacles.push(door);
+            break;
+            case 3: let key = new Key((row * TILE_SIZE), (col * TILE_SIZE), random(['red', 'green', 'blue']));
+                obstacles.push(key);
+            break;
           }
         }
     }
@@ -163,8 +182,12 @@ function actionResponse(data) {
             else speaking(`There is nothing in front of me.`);
         break;
         case 'pick up the key': case 'can you pick it up': case 'pick it up':
-            if(blocking != null && blocking.name == 'key') player.pickUp(blocking);
+            if(blocking != null && blocking.name == 'key') player.pickup(blocking);
             else speaking(`I can't pick that up.`);
+        break;
+        case 'open the door': case 'can you open the door': case 'can you open it': case 'open it':
+            if(blocking != null && blocking.name == 'door' && player.unlock(blocking)) speaking(`I opened the door!`);
+            else speaking(`I can't open this.`);
         break;
     }
 }

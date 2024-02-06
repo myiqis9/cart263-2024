@@ -8,6 +8,7 @@ class Player {
         this.distance = null;
         this.holding = [];
         this.speed = 5;
+        this.color = 'blue';
     }
 
     move() {
@@ -88,14 +89,27 @@ class Player {
         return false; //no obstacle 
     }
 
-    pickUp() {
-        print('picking up item');
+    pickup(obj) {
+        this.holding.push(obj.color);
+        speaking(`I picked up a ${obj.color} key.`);
+        obstacles.splice(obstacles.indexOf(obj), 1);
+    }
+
+    unlock(obj) {
+        for(let key of this.holding) {
+            if(obj.color == key) {
+                obstacles.splice(obstacles.indexOf(obj), 1);
+                this.holding.splice(this.holding.indexOf(key), 1);
+                return true;
+            }
+        }
+        return false;
     }
 
     //display player
     display() {
         push();
-        fill(250, 90, 90);
+        fill(COLORS[this.color][0], COLORS[this.color][1], COLORS[this.color][2]);
         noStroke();
         ellipseMode(CORNER);
         ellipse(this.x, this.y, this.size);
