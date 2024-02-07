@@ -61,7 +61,7 @@ let world = [
     [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,2,1], //6
     [1,0,0,0,1,3,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1], //7
     [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1], //8
-    [1,0,0,0,0,0,1,0,0,0,2,0,0,0,1,0,0,0,1,0,4], //9
+    [1,0,0,0,0,0,2,0,0,0,2,0,0,0,1,0,0,0,1,0,4], //9
     [1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1], //10
     [1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1], //11
     [1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,2,1], //12
@@ -70,6 +70,13 @@ let world = [
     [1,0,0,0,0,3,1,0,0,0,0,0,0,0,1,0,0,0,1,3,1], //15
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] //16
 ]
+
+//timer
+let minutes = 0;
+let seconds = 0;
+let timer;
+let m = '';
+let s = '';
 
 //p5js setup 
 function setup() {
@@ -144,6 +151,16 @@ function draw() {
 //title screen
 function title() {
     background(255);
+
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(38);
+    text(`INVISIBLE MAZE ESCAPE!`, width/2, height/2 - 70);
+    textSize(18);
+    text(`Guide your digital companion through an invisible maze using your voice.`, width/2, height/2);
+    text(`If you communicate, it will respond. Uncover the maze by working together!`, width/2, height/2+30);
+    text(`Click anywhere to start.`, width/2, height/2+60);
+    pop();
 }
 
 //game screen
@@ -157,7 +174,17 @@ function game() {
 
 //win screen
 function win() {
-    print('You won the game!!!');
+    background(255);
+
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(40);
+    text(`YOU WON!`, width/2, height/2 - 70);
+    textSize(18);
+    text(`You did it! With your help, your companion got to escape the maze!`, width/2, height/2);
+    text(`It took you ${minutes} minutes and ${seconds} seconds to find the exit together.`, width/2, height/2+30);
+    text(`Want to try again? Click anywhere to restart.`, width/2, height/2+60);
+    pop();
 }
 
 //voice recognizer result function
@@ -169,7 +196,7 @@ function voiceResult() {
 
         for(let command of COMMANDS) {
             let match = spoken.match(command.command);
-            console.log(match);
+            //console.log(match);
 
             if (match != null && match.length > 1) {
                 command.callback(match);
@@ -186,7 +213,7 @@ function actionDirection(data) {
         case 'go': case 'move': case 'go to the': case 'move to the':
             moving(data[2], 0);
         break;
-        case 'look to your': case 'look': case 'turn': case 'turn to your':
+        case 'look to the': case 'look': case 'turn': case 'turn to the':
             looking(data[2]);
         break;
     }
@@ -213,7 +240,7 @@ function actionSpaces(data) {
 //what is blocking player, player picks up item, player uses item
 function actionResponse(data) {
     switch(data[1]) {
-        case 'hello': case 'hi':
+        case 'hello': case 'hi': case 'hey':
             speaking(`Hello, player. I need your help to get out of here.`);
         break;
         case 'what can you do': case 'what can i ask you': case 'how can i help':
@@ -221,7 +248,7 @@ function actionResponse(data) {
         break;
         case 'whats in front of you': case 'what do you see': case 'whats blocking you':
             if(blocking != null) {
-                speaking(`There is a ${blocking.String()} in front of me.`);
+                speaking(`There is a ${blocking.string()} in front of me.`);
                 blocking.makeVisible();
             }
             else speaking(`There is nothing in front of me.`);
@@ -280,15 +307,37 @@ function speaking(text) {
     transcript = text;
 }
 
-//player voice transcript
+//player voice transcript && timer
 function displayText() {
+    //makes sure timer always displays as 00:00 format
+    if(minutes < 10) m = '0' + minutes;
+    else m = minutes;
+    if(seconds < 10) s = '0' + seconds;
+    else s = seconds;
+
     push();
     textAlign(CENTER, TOP);
     textSize(18);
-    text(transcript, width/2, height-48);
+    text(transcript, width/2, height-48); //transcript
+    fill(COLORS.yellow[0], COLORS.yellow[1], COLORS.yellow[2]);
+    text(`${m}:${s}`, width-42, 8); //timer
     pop();
 }
 
+function timing() {
+    seconds++;
+
+    if(seconds > 59) {
+        minutes++;
+        seconds = 0;
+    }
+}
+
 function mousePressed() {
-    if(state == 'title') state = 'game';
+    if(state == 'title') {
+        state = 'game';
+        timer = setInterval(timing, 1000);
+    }
+
+    if(state == 'win') location.reload();
 }

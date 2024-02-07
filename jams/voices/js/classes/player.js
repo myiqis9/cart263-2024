@@ -82,6 +82,7 @@ class Player {
             if(obs.x == povX && obs.y == povY) {
                 //has player reached the exit?
                 if(obs.name === 'exit') {
+                    clearInterval(timer);
                     state = 'win'; //game won!
                     return false;
                 }
@@ -101,6 +102,7 @@ class Player {
         this.holding.push(obj.color);
         speaking(`I picked up a ${obj.color} key.`);
         obstacles.splice(obstacles.indexOf(obj), 1);
+        blocking = null;
     }
 
     //unlock door
@@ -111,6 +113,7 @@ class Player {
             if(obj.color == key) {
                 obstacles.splice(obstacles.indexOf(obj), 1);
                 this.holding.splice(this.holding.indexOf(key), 1);
+                blocking = null;
                 return true;
             }
         }

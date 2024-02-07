@@ -7,7 +7,7 @@ class Obstacle {
         this.visible = false;
     }
 
-    String() {
+    string() {
         return this.name;
     }
 

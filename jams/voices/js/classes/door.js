@@ -16,7 +16,7 @@ class Door extends Obstacle {
         pop();
     }
 
-    String() {
+    string() {
         return `${this.color} ${this.name}`;
     }
 }

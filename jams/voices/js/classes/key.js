@@ -15,7 +15,7 @@ class Key extends Obstacle {
         pop();
     }
 
-    String() {
+    string() {
         return `${this.color} ${this.name}`;
     }
 }
