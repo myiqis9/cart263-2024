@@ -1,3 +1,4 @@
-# Template p5 project
+# Voices Jam - Invisible Maze
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+For the voices jam for CART 263 using the p5.speech library.
+I made an invisible maze you need to navigate through voice, along with finding keys to open color coded doors.
