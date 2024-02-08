@@ -93,9 +93,9 @@ function setup() {
     recognizer.start();
 
     //funny voice settings
-    voice.setVoice(`Microsoft Aria Online (Natural) - English (United States)`);
-    voice.setRate(1.5);
-    voice.setPitch(0.6);
+    voice.setVoice(`Microsoft Zira - English (United States)`);
+    voice.setRate(1.8);
+    voice.setPitch(1);
 }
 
 /* 
@@ -339,7 +339,7 @@ function mousePressed() {
         timer = setInterval(timing, 1000);
     }
 
-    if(state == 'game') voice.listVoices();
+    //if(state == 'game') voice.listVoices();
 
     if(state == 'win') location.reload();
 }
