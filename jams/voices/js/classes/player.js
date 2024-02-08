@@ -1,3 +1,4 @@
+//player character class, moves according to voice instructions
 class Player {
     constructor(x, y) {
         this.x = x;

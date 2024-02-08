@@ -1,3 +1,4 @@
+//exit obstacle - always visible, crossing it ends the game!
 class Exit extends Obstacle {
     constructor(x, y) {
         super(x, y);

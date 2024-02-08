@@ -1,4 +1,5 @@
-class Obstacle {
+//global class that all obstacles inherit from
+class Obstacle { 
     constructor(x, y) {
         this.name = '';
         this.x = x;

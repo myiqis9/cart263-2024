@@ -339,5 +339,7 @@ function mousePressed() {
         timer = setInterval(timing, 1000);
     }
 
+    if(state == 'game') voice.listVoices();
+
     if(state == 'win') location.reload();
 }

@@ -1,3 +1,4 @@
+//wall obstacle, makes up most of the maze, invisible unless revealed
 class Wall extends Obstacle {
     constructor(x, y) {
         super(x, y);

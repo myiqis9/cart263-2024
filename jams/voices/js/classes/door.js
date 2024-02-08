@@ -1,3 +1,4 @@
+//door obstacle - they need a key to open. only visible once revealed
 class Door extends Obstacle {
     constructor(x, y, color) {
         super(x, y);

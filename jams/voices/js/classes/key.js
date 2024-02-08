@@ -1,3 +1,4 @@
+//keys obstacle - they are always visible and can be picked up
 class Key extends Obstacle {
     constructor(x, y, color) {
         super(x, y);
