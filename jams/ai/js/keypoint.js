@@ -8,8 +8,14 @@ class Keypoint {
     //all functions are checked from mouth top point being 'this'
     checkHappy(mLeft, mRight) {
         print('checking happy');
-        if(mLeft.y < this.y && mRight.y < this.y) print('happy!!!');
-        else print('not happy :(');
+        if(mLeft.y < this.y && mRight.y < this.y) {
+            print('happy!!!');
+            return true;
+        }
+        else {
+            print('not happy :(');
+            return false;
+        }
     }
 
     checkFrown(mLeft, mRight) {

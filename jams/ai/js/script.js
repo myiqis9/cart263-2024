@@ -13,7 +13,6 @@ let facemesh;
 let video;
 let predictions = [];
 
-let transcript = "";
 let timer;
 let flash;
 let blind = 0;
@@ -33,15 +32,19 @@ let timeline = [
 /* 2 */ 'Text 3',
 /* 3 */ 'Text 4',
 /* 4 */ 'Check happens next',
+/* flash here */
 /* 5 */ 'Go here if check successful',
 /* 6 */ 'Blah blah',
 /* 7 */ 'Another check next',
+/* flash here */
 /* 8 */ 'Go here if check successful',
 /* 9 */ 'Blaaaaa',
 /* 10 */ 'Another check',
+/* flash here */
 /* 11 */ 'Check success',
 /* 12 */ 'Blah blah',
 /* 13 */ 'Check next',
+/* flash here */
 /* 14 */ 'Check success',
 /* 15 */ 'You passed every check!!!',
 /* 16 */ 'This is the check failure',
@@ -67,7 +70,23 @@ function setup() {
 
 function startSequence() {
     console.log("Model ready!");
-    transcript = timeline[0];
+}
+
+//advances text timeline
+//check cases where the program would start the timer, disable display so no interruption
+function checkTimeline() {
+    switch(ti) {
+        case 4: case 7: case 10: case 13:
+            display = false;
+            setTimer();
+            break;
+            case 15: case 17:
+            location.reload(); //ending dialogue reset point
+            break;
+        default:
+            ti++;
+            break;
+    }
 }
 
 //check specific checkpoints
@@ -94,6 +113,8 @@ function findKeypoints() {
 // 1 bottom
 // 2 left
 // 3 right
+//this happens during a small window frame of 0.1 second at the start of the camera flash
+//the last result obtained is retained in bool success
 function checkEmotion() {
     switch(emotion) {
         case 'happy':
@@ -111,6 +132,26 @@ function checkEmotion() {
     }
 }
 
+//checks results retained in variable success being true or false in checkEmotion()
+function checkResults() {
+    if(success) {
+        ti++; //advances dialogue like usual
+
+        //if success, change emotion to what the next check will be for
+        switch(ti) {
+            case 5: emotion = 'frown';
+                break;
+            case 8: emotion = 'surprised';
+                break;
+            case 11: emotion = 'overjoyed';
+                break;
+        }
+    }
+    else ti = 16; //failure dialogue
+    display = true; //reset dialogue to be displayed + user control
+}
+
+//p5js draw
 function draw() {
     image(video, 0, 0, width, height);
     if(blind > 0) drawBlind();
@@ -120,6 +161,7 @@ function draw() {
     drawKeypoints();
 }
 
+//keypoints draw (temporary)
 function drawKeypoints() {
     let index = 0;
     for(let key of keypoints) {
@@ -131,6 +173,7 @@ function drawKeypoints() {
     }
 }
 
+//'camera' flash effect draw
 function drawBlind() {
     push();
     rectMode(CENTER);
@@ -140,6 +183,7 @@ function drawBlind() {
     pop();
 }
 
+//countdown draw
 function drawCountdown() {
     push();
     textAlign(CENTER, CENTER);
@@ -149,10 +193,17 @@ function drawCountdown() {
     pop();
 }
 
+//draw the dialogue transcript from the timeline
 function drawTranscript() {
-    
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(24);
+    fill(255);
+    text(timeline[ti], width/2, height/2+100);
+    pop();
 }
 
+//sets timer
 function setTimer() {
     countdown = 3;
     timer = setInterval(timerInterval, 800);
@@ -186,9 +237,11 @@ function flashInterval() {
     if(blind <= 0) {
         blind = 0;
         clearInterval(flash);
+        checkResults();
     }
 }
 
+//user advances dialogue in timeline with mouseclick
 function mousePressed() {
-    setTimer();
+    if(display) checkTimeline();
 }
