@@ -48,7 +48,7 @@ let timeline = [
 /* flash here */
 /* 11 */ "Third test was a success!",
 /* 12 */ "The next one will be even more surprising! Prepare yourself.",
-/* 13 */ "Final prompt: you have just won a million dollar lottery! Are you ready?",
+/* 13 */ "Final prompt: your friend just told you a really funny joke! Are you ready?",
 /* flash here */
 /* 14 */ "Congratulations! You successfully passed every check!!!",
 /* 15 */ "We have confirmed you are human. You may celebrate your epic human status, or click anywhere to take the test again!",
