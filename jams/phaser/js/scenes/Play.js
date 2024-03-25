@@ -3,49 +3,112 @@ class Play extends Phaser.Scene {
         super({
             key: 'play'
         });
-
-        //player's card inventory
-        this.playerCards = [];
-
-        //player's starting amount of coins
-        this.coins = 10;
     }
 
     create() {
+        //player's card inventory, the deck
+        this.deck = [];
+
+        //player's starting amount of coins
+        this.coins = 10;
+
+        //can player interact with game?
+        this.canInteract = false;
+
+        //create description box
+        this.txtImg = this.add.image(0, 0, 'textbox');
+        this.txt = this.add.text(-175, -65, ``, {
+            fontFamily: 'pstart',
+            fontSize: 12,
+            color: '#548087',
+            align: 'left',
+            lineSpacing: 10,
+            wordWrap: { width: 370 }
+        });
+        this.textbox = this.add.container(this.game.config.width/2+80, 400, [this.txtImg, this.txt]);
+        this.textbox.setScale(0.8);
+
         //create all existing cards in the game
-        this.card1 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'saki')]);
-        this.saki = new Card(this, 'saki', 2, 3, `HP: 2 ATK: 4 | your other cards will always retain happiness as long as this card is alive.`, this.card1);
+        this.card1 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'saki')]);
+        this.saki = new Card('saki', 2, 3, `HP: 2 ATK: 3 \nYOUR OTHER CARDS WILL ALWAYS RETAIN HAPPINESS AS LONG AS THIS CARD IS ALIVE.`, this.card1);
 
-        this.card2 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'emu')]);
-        this.emu = new Card(this, 'emu', 6, 6, `HP: 6 ATK: 6 | high stats, but gets hungry very fast. will cannibalize other party members if it has to.`, this.card2);
+        this.card2 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'emu')]);
+        this.emu = new Card('emu', 6, 6, `HP: 6 ATK: 6 \nHIGH STATS, BUT GETS HUNGRY VERY FAST. WILL CANNIBALIZE OTHER PARTY MEMBERS IF IT HAS TO.`, this.card2);
 
-        this.card3 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'kasa')]);
-        this.kasa = new Card(this, 'kasa', 5, 4, `HP: 5 ATK: 4 | will double food/rest time, but if it is low on happiness even once, it will kill itself.`, this.card3);
+        this.card3 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'kasa')]);
+        this.kasa = new Card('kasa', 5, 4, `HP: 5 ATK: 4 \nWILL DOUBLE FOOD / REST REWARDS, BUT IF IT IS LOW ON HAPPINESS EVEN ONCE, IT WILL KILL ITSELF.`, this.card3);
 
-        this.card4 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'nene')]);
-        this.nene = new Card(this, 'nene', 4, 4, `HP: 4 ATK: 4 | nothing special about this one. just keep it happy and well-fed.`, this.card4);
+        this.card4 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'nene')]);
+        this.nene = new Card('nene', 4, 4, `HP: 4 ATK: 4 \nNOTHING SPECIAL ABOUT THIS ONE. JUST KEEP IT HAPPY AND WELL-FED.`, this.card4);
 
+        this.card5 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'rui')]);
+        this.rui = new Card('rui', 3, 7, `HP: 3 ATK: 7 \nDEALS MASSIVE DAMAGE, BUT HAS A CHANCE TO ALSO HURT ALLIES.`, this.card5);
 
-        this.card5 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'rui')]);
-        this.rui = new Card(this, 'rui', 3, 7, `HP: 3 ATK: 7 | deals massive damage, but has a chance to also hurt allies.`, this.card5);
-
-        this.card6 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'kana')]);
-        this.kana = new Card(this, 'kana', 2, 5, `HP: 2 ATK: 4 | extremely resilient, will survive low hunger/exhaustion, but very low default health.`, this.card6);
+        this.card6 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'kana')]);
+        this.kana = new Card('kana', 2, 5, `HP: 2 ATK: 4 \nEXTREMELY RESILIENT, WILL SURVIVE LOW HUNGER / EXHAUSTION, BUT VERY LOW DEFAULT HEALTH.`, this.card6);
         
-        this.card7 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'mafu')]);
-        this.mafu = new Card(this, 'mafu', 4, 5, `HP: 4 ATK: 5 | can keep fighting at low happiness, but drains faster in hunger/exhaustion.`, this.card7);
+        this.card7 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'mafu')]);
+        this.mafu = new Card('mafu', 4, 5, `HP: 4 ATK: 5 \nCAN KEEP FIGHTING AT LOW HAPPINESS, BUT DRAINS FAST IN EXHAUSTION.`, this.card7);
 
-        this.card8 = this.add.container(this.game.config.width/2-170, 100, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'mizu')]);
-        this.mizu = new Card(this, 'mizu', 5, 5, `HP: 3 ATK: 7 | deals massive damage, but has a chance to also hurt allies.`, this.card8);
+        this.card8 = this.add.container(this.game.config.width/2-150, -200, [this.add.image(0, 0, 'bg'), this.add.image(0, 0, 'mizu')]);
+        this.mizu = new Card('mizu', 5, 5, `HP: 5 ATK: 5 \nTAKES DOUBLE TIME TO REST FROM EXHAUSTION, BUT REQUIRES LESS FOOD.`, this.card8);
         
         //add them all to an array, lower their scale, then shuffle it
         this.allCards = [this.saki, this.emu, this.kasa, this.nene, this.rui, this.kana, this.mafu, this.mizu];
-        for(let card of this.allCards) card.container.setScale(0.8);
+        for(let card of this.allCards) card.container.setScale(0.7);
         Phaser.Utils.Array.Shuffle(this.allCards);
 
-        //grab first 3 as the starters and make only those stay
+        //grab first 3 as the starters
         this.cardSelection = [this.allCards[0], this.allCards[1], this.allCards[2]];
-        for(let card of this.cardSelection) card.container.visible = true;
+
+        //card animation
+        this.cardAppear(this.cardSelection);
+
+        //interactivity with the starter cards
+        for(let card of this.cardSelection) {
+            card.container.setSize(165, 177);
+            card.container.setInteractive();
+            card.container.on('pointerover', () => {
+                if(this.canInteract) {
+                    console.log(card.name);
+                    this.txt.setText(card.description);
+                }
+            });
+
+            card.container.on('pointerout', () => {
+                this.txt.setText('');
+            });
+        }
+    }
+
+    cardAppear(cards) {
+        //update the x position for the cards
+        cards[1].container.x += 150;
+        cards[2].container.x += 300;
+
+        //tween the cards to appear from out of bounds in order (chain)
+        this.tweens.chain({
+            tweens: [
+                {
+                    targets: cards[0].container,
+                    y: 200,
+                    duration: 200
+                },
+                {
+                    targets: cards[1].container,
+                    y: 200,
+                    duration: 200
+                },
+                {
+                    targets: cards[2].container,
+                    y: 200,
+                    duration: 200
+                }
+            ]
+        });
+
+        //the player can now interact with cards
+        this.canInteract = true;
     }
 
     update() {

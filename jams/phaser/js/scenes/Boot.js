@@ -29,10 +29,10 @@ class Boot extends Phaser.Scene {
     }
 
     create() {
-        this.loadtxt = this.add.text(100, 200, 'Loading...', {
-            fontFamily: 'sans-serif',
-            fontSize: 16,
-            color: '#ffffff'
+        this.loadtxt = this.add.text(this.game.config.width/2-100, this.game.config.height/2, 'Loading...', {
+            fontFamily: 'pstart',
+            fontSize: 22,
+            color: '#548087'
         });
         this.loadtxt.visible = true;
     }

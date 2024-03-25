@@ -1,5 +1,5 @@
 class Card {
-    constructor(scene, name, hp, atk, description, container) {
+    constructor(name, hp, atk, description, container) {
         //card information
         this.name = name;
         this.hp = hp;
@@ -11,9 +11,5 @@ class Card {
         this.happiness = 5;
         this.hunger = 5;
         this.exhaustion = 5;
-
-        //card position
-        this.x = 0;
-        this.y = 0;
     }
 }
