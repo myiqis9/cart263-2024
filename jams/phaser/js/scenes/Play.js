@@ -29,7 +29,7 @@ class Play extends Phaser.Scene {
         this.textbox.setScale(0.8);
 
         //default parameters for stats displayed on each card
-        //ADD THIS EVENTUALLY
+        //ADD THIS EVENTUALLY IN FUTURE
         let param = {
             fontFamily: 'pstart',
             fontSize: 32,
@@ -77,6 +77,8 @@ class Play extends Phaser.Scene {
         for(let card of this.cardSelection) {
             card.container.setSize(165, 177); //interaction box
             card.container.setInteractive(); //makes them able to interact
+
+            //hovering shows card desc
             card.container.on('pointerover', () => {
                 if(this.canInteract) {
                     console.log(card.name);
@@ -84,10 +86,12 @@ class Play extends Phaser.Scene {
                 }
             });
 
+            //cancel hover
             card.container.on('pointerout', () => {
                 if(this.canInteract) this.txt.setText('');
             });
 
+            //click on card
             card.container.on('pointerdown', () => {
                 if(this.canInteract) this.addCard(card);
             });
@@ -139,6 +143,7 @@ class Play extends Phaser.Scene {
         //add card to player deck
         this.deck.push(card);
 
+        //more tweening animations
         this.tweens.chain({
             tweens: [
                 {
@@ -157,6 +162,7 @@ class Play extends Phaser.Scene {
         });
     }
 
+    //change scene to battle
     changeScenes() {
         this.txt.setText(``);
 
