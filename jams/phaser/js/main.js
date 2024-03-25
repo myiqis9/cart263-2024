@@ -15,13 +15,13 @@ https://labs.phaser.io/edit.html?src=src\tweens\chains\multi%20target%20chain.js
 let config = {
     type: Phaser.AUTO,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 600,
+    width: 720,
     height: 520,
     backgroundColor: '#d3dcdd',
     physics: {
         default: 'arcade'
     },
-    scene: [Boot, Play]
+    scene: [Boot, Battle, Play]
 };
 
 let game = new Phaser.Game(config);

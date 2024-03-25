@@ -6,14 +6,9 @@ class Boot extends Phaser.Scene {
     }
 
     preload() {
-        this.preloaded = false;
-
-        //saki, emu, kasa, nene, rui, kana, mafu, mizu
-        this.load.spritesheet('cards', 'assets/images/proto_spritesheet.png', {
-            frameWidth: 175,
-            frameHeight: 192
-        })
-
+        //all images
+        //character sprites are not mine. they're taken from the mobile game Project Sekai: Colorful Stage!
+        //copyright Colorful Palette https://www.colorfulstage.com/ I'm just using them for fun as filler
         this.load.image('textbox', 'assets/images/textbox.png');
         this.load.image('bg', 'assets/images/bg.png');
         this.load.image('saki', 'assets/images/saki.png');
