@@ -11,7 +11,7 @@ class Shop extends Phaser.Scene {
     }
 
     create() {
-        const main = this.scene.get('play');
+        
 
         console.log('this is the shop scene!');
     }
