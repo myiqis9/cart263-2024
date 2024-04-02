@@ -116,6 +116,7 @@ class Select extends Phaser.Scene {
 
     //change scene to battle
     changeScenes() {
+        this.player.canInteract = false;
         this.player.text.setText('');
         this.player.sortDeck();
 

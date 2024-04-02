@@ -15,9 +15,15 @@ class Player {
 
         //are we currently in the tutorial/first scene?
         this.tutorial = true;
+        
+        //how many battles has the player gone through? / level count
+        this.round = 1;
 
         //deck of all cards in the game
         this.allCards = [];
+
+        //list of all enemies
+        this.allEnemies = [];
 
         //textbox
         this.textbox = null;

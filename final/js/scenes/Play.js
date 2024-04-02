@@ -56,6 +56,33 @@ class Play extends Phaser.Scene {
             ability: `TAKES DOUBLE TIME TO REST FROM EXHAUSTION, BUT REQUIRES LESS FOOD.`
         }
         ];
+
+        this.enemyData = [
+            {
+                name: 'bear',
+                hp: 10
+            },
+            {
+                name: 'clock',
+                hp: 20
+            },
+            {
+                name: 'crusher',
+                hp: 22
+            },
+            {
+                name: 'dodo',
+                hp: 32
+            },
+            {
+                name: 'horse',
+                hp: 34
+            },
+            {
+                name: 'mage',
+                hp: 50
+            }
+        ]
     }
 
     create() {
@@ -71,11 +98,20 @@ class Play extends Phaser.Scene {
             card.createContainer();
             this.player.allCards.push(card);
         }
+
+        //create all existing enemies in the game
+        for(let data of this.enemyData) {
+            const enemy = new Enemy(data);
+            this.player.allEnemies.push(enemy);
+        }
         
         //lower all cards scale, then shuffle them
         for(let card of this.player.allCards) card.container.setScale(0.7);
         Phaser.Utils.Array.Shuffle(this.player.allCards);
+
+        //testing
         console.log(this.player.allCards);
+        console.log(this.player.allEnemies);
 
         this.startGame();
     }

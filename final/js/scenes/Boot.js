@@ -20,6 +20,16 @@ class Boot extends Phaser.Scene {
         this.load.image('mafu', 'assets/images/mafu.png');
         this.load.image('mizu', 'assets/images/mizu.png');
 
+        //load all enemies
+        //enemy sprites are taken from the game Maplestory
+        //copyright Wizet https://maplestory.nexon.net/
+        this.load.image('bear', 'assets/images/enemies/bear.png');
+        this.load.image('clock', 'assets/images/enemies/clock.png');
+        this.load.image('crusher', 'assets/images/enemies/crusher.png');
+        this.load.image('dodo', 'assets/images/enemies/dodo.png');
+        this.load.image('horse', 'assets/images/enemies/horse.png');
+        this.load.image('mage', 'assets/images/enemies/mage.png');
+
         this.load.on('complete', this.start);
     }
 

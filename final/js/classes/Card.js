@@ -4,6 +4,7 @@ class Card {
         this.scene = scene;
         this.name = data.name;
         this.hp = data.hp;
+        this.maxhp = data.hp;
         this.atk = data.atk;
         this.ability = data.ability;
         

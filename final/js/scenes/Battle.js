@@ -5,7 +5,10 @@ class Battle extends Phaser.Scene {
             key: 'battle'
         });
 
-        this.enemy = '';
+        this.enemy = null;
+
+        //how many moves player has each round
+        this.moves = 2; 
     }
 
     //grab player info
@@ -23,8 +26,9 @@ class Battle extends Phaser.Scene {
         //set the first character in the player deck as the active character by default
         this.active = this.player.deck[0]; 
 
-        //how many moves player has each round
-        this.moves = 2; 
+        //grab active monster
+        this.enemy = this.player.allEnemies[this.player.round];
+        this.enemy.createContainer(this);
 
         //starter text when battle loads
         if(this.player.tutorial) this.player.text.setText(`NOW, ONTO BATTLE!`);
@@ -36,6 +40,12 @@ class Battle extends Phaser.Scene {
     }
 
     startBattle() {
+
+
+        this.moveToActive(this.active);
+    }
+
+    moveToActive(card) {
 
     }
 
