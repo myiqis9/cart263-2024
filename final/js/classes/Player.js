@@ -17,7 +17,7 @@ class Player {
         this.tutorial = true;
         
         //how many battles has the player gone through? / level count
-        this.round = 1;
+        this.round = 0;
 
         //deck of all cards in the game
         this.allCards = [];

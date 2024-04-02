@@ -60,27 +60,39 @@ class Play extends Phaser.Scene {
         this.enemyData = [
             {
                 name: 'bear',
-                hp: 10
-            },
-            {
-                name: 'clock',
-                hp: 20
-            },
-            {
-                name: 'crusher',
-                hp: 22
+                hp: 10,
+                x: 40,
+                y: 40
             },
             {
                 name: 'dodo',
-                hp: 32
+                hp: 18,
+                x: 45,
+                y: 64
             },
             {
                 name: 'horse',
-                hp: 34
+                hp: 22,
+                x: 55,
+                y: 72
+            },
+            {
+                name: 'clock',
+                hp: 32,
+                x: 65,
+                y: 95
+            },
+            {
+                name: 'crusher',
+                hp: 38,
+                x: 45,
+                y: 75
             },
             {
                 name: 'mage',
-                hp: 50
+                hp: 50,
+                x: 45,
+                y: 40
             }
         ]
     }

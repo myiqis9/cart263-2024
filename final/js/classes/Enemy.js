@@ -2,6 +2,8 @@ class Enemy {
     constructor(data) {
         this.name = data.name;
         this.hp = data.hp;
+        this.txtX = data.x;
+        this.txtY = data.y;
 
         this.container = null;
         this.hpTxt = null;
@@ -11,15 +13,17 @@ class Enemy {
         //parameters for text on card
         const param = {
             fontFamily: 'pstart',
-            fontSize: 36,
-            color: '#548087'
+            fontSize: 37,
+            color: '#548087',
+            stroke: '#d3dcdd',
+            strokeThickness: 5
         }
 
         //separate values for hp and atk text, since we're going to access these later on
-        this.hpTxt = scene.add.text(45, 40, this.hp, param);
+        this.hpTxt = scene.add.text(this.txtX, this.txtY, this.hp, param);
 
         //create container that has everything in the card
-        this.container = scene.add.container(scene.game.config.width/2, 160, [scene.add.image(0, 0, this.name), this.hpTxt]);
+        this.container = scene.add.container(scene.game.config.width+200, 160, [scene.add.image(0, 0, this.name), this.hpTxt]);
         this.container.setScale(0.9);
     }
 

@@ -30,7 +30,7 @@ class Select extends Phaser.Scene {
 
             //hovering shows card desc
             card.container.on('pointerover', () => {
-                if(this.canInteract) {
+                if(this.player.canInteract) {
                     console.log(card.name);
                     this.player.text.setText(card.description);
                 }
@@ -38,12 +38,12 @@ class Select extends Phaser.Scene {
 
             //cancel hover
             card.container.on('pointerout', () => {
-                if(this.canInteract) this.player.text.setText('');
+                if(this.player.canInteract) this.player.text.setText('');
             });
 
             //click on card
             card.container.on('pointerdown', () => {
-                if(this.canInteract) this.addCard(card);
+                if(this.player.canInteract) this.addCard(card);
             });
         }
     }
@@ -70,13 +70,14 @@ class Select extends Phaser.Scene {
                 {
                     targets: cards[2].container,
                     y: 200,
-                    duration: 200
+                    duration: 200,
+                    onComplete: () => {
+                        //the player can now interact with cards
+                        this.player.canInteract = true;
+                    }
                 }
             ]
         });
-
-        //the player can now interact with cards
-        this.canInteract = true;
     }
 
     addCard(card) {
@@ -93,6 +94,11 @@ class Select extends Phaser.Scene {
         //add card to player deck
         this.player.deck.push(card);
 
+        //remove event listeners of the card from this scene
+        card.container.off('pointerover');
+        card.container.off('pointerout');
+        card.container.off('pointerdown');
+
         //more tweening animations
         this.tweens.chain({
             tweens: [
@@ -108,7 +114,7 @@ class Select extends Phaser.Scene {
                     x: 100,
                     y: 400,
                     duration: 200,
-                    onComplete: this.changeScenes()
+                    onComplete: () => { this.changeScenes() }
                 }
             ]
         });

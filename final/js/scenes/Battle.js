@@ -40,13 +40,52 @@ class Battle extends Phaser.Scene {
     }
 
     startBattle() {
-
-
-        this.moveToActive(this.active);
+        console.log(this.active);
+        this.tweens.chain({
+            tweens: [
+                {
+                    //move active card to active slot
+                    targets: this.active.container,
+                    x: this.game.config.width/2-156,
+                    y: 160,
+                    duration: 200
+                },
+                {
+                    //adds card to deck
+                    targets: this.enemy.container,
+                    x: this.game.config.width/2+100,
+                    duration: 1000,
+                    onComplete: () => { this.battleSetup() }
+                }
+            ]
+        });
     }
 
-    moveToActive(card) {
+    battleSetup() {
+        console.log('battle starts');
+        this.player.canInteract = true;
 
+        for(let card of this.player.deck) {
+            if(card == this.active) {
+                //click on active card
+                card.container.on('pointerdown', () => {
+                    if(this.player.canInteract) this.attack();
+                });
+            }
+            else {
+                card.container.on('pointerdown', () => {
+                    if(this.player.canInteract) this.swap(card);
+                });
+            }
+        }
+    }
+
+    attack() {
+        console.log('attacking!');
+    }
+
+    swap(card) {
+        console.log('swapping!');
     }
 
     battleMenu() {
