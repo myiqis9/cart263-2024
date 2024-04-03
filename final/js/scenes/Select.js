@@ -19,14 +19,13 @@ class Select extends Phaser.Scene {
     getCardSelection() {
         //grab first 3 as the starters
         this.cardSelection = [this.player.allCards[0], this.player.allCards[1], this.player.allCards[2]];
+        console.log(this.cardSelection);
 
         //card animation
         this.cardAppear(this.cardSelection);
 
         //interactivity with the starter cards
         for(let card of this.cardSelection) {
-            card.container.setSize(165, 177); //interaction box
-            card.container.setInteractive(); //makes them able to interact
 
             //hovering shows card desc
             card.container.on('pointerover', () => {
@@ -51,8 +50,9 @@ class Select extends Phaser.Scene {
     //animation that makes the selected cards show on screen
     cardAppear(cards) {
         //update the x position for the cards
-        cards[1].container.x += 150;
-        cards[2].container.x += 300;
+        cards[0].container.x = this.game.config.width/2-150;
+        cards[1].container.x = this.game.config.width/2;
+        cards[2].container.x = this.game.config.width/2+150;
 
         //tween the cards to appear from out of bounds in order (chain)
         this.tweens.chain({
@@ -84,6 +84,13 @@ class Select extends Phaser.Scene {
         console.log('adding card');
         this.canInteract = false;
 
+        for(let c of this.cardSelection) {
+            //remove event listeners of the cards from this scene
+            c.container.off('pointerover');
+            c.container.off('pointerout');
+            c.container.off('pointerdown');
+        }
+
         //removes added card from the cardSelection list to enable tween below
         //and from allCards so that it doesn't get rolled again in the future.
         let i1 = this.cardSelection.indexOf(card);
@@ -94,29 +101,19 @@ class Select extends Phaser.Scene {
         //add card to player deck
         this.player.deck.push(card);
 
-        //remove event listeners of the card from this scene
-        card.container.off('pointerover');
-        card.container.off('pointerout');
-        card.container.off('pointerdown');
+        //debug
+        console.log(this.cardSelection);
 
         //more tweening animations
-        this.tweens.chain({
-            tweens: [
-                {
-                    //other two cards go back oob
-                    targets: [this.cardSelection[0].container, this.cardSelection[1].container],
-                    y: -200,
-                    duration: 200
-                },
-                {
-                    //adds card to deck
-                    targets: card.container,
-                    x: 100,
-                    y: 400,
-                    duration: 200,
-                    onComplete: () => { this.changeScenes() }
-                }
-            ]
+        this.tweens.add({
+            //other two cards go back oob
+            targets: [this.cardSelection[0].container, this.cardSelection[1].container],
+            y: -200,
+            duration: 200,
+            onComplete: () => { 
+                this.player.sortDeck();
+                this.changeScenes();
+            }
         });
     }
 
@@ -124,11 +121,13 @@ class Select extends Phaser.Scene {
     changeScenes() {
         this.player.canInteract = false;
         this.player.text.setText('');
-        this.player.sortDeck();
 
         setTimeout(() => {
             if(this.player.tutorial) this.scene.start('battle', this.player);
-            else this.scene.start('shop');
+            else {
+                this.player.selection--;
+                this.scene.start('shop', this.player);
+            }
         }, 500);
     }
 }

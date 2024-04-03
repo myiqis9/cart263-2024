@@ -19,6 +19,9 @@ class Player {
         //how many battles has the player gone through? / level count
         this.round = 0;
 
+        //how many choices does the player have in the shop? / reset every battle
+        this.selection = 2;
+
         //deck of all cards in the game
         this.allCards = [];
 
@@ -37,26 +40,49 @@ class Player {
 
         this.text = this.scene.add.text(-175, -65, `PICK A STARTER CARD.`, {
             fontFamily: 'pstart',
-            fontSize: 14,
+            fontSize: 13,
             color: '#548087',
             align: 'left',
             lineSpacing: 10,
-            wordWrap: { width: 370 }
+            wordWrap: { width: 380 }
         });
 
         this.textbox = this.scene.add.container(this.scene.game.config.width/2+80, 400, [txtImg, this.text]);
-        this.textbox.setScale(0.8);
+        this.textbox.setScale(0.9);
     }
 
     //sort the player's deck display
     sortDeck() {
-        Phaser.Actions.GridAlign(this.deck, {
-            width: 4,
-            height: 1,
-            cellWidth: 80,
-            cellHeight: 150,
-            x: 100,
-            y: 400
-        });
+        let xDist = 80;
+        let depth = 1;
+
+        for(let card of this.deck) {
+            card.container.depth = depth;
+            this.scene.tweens.add({
+                targets: card.container,
+                    x: xDist,
+                    y: 400,
+                    duration: 200
+            });
+            xDist += 60;
+            depth++;
+        }
     }
+
+    healAll() {
+        for(let card of this.deck) {
+            card.hp = card.maxhp;
+            card.updateValues();
+        }
+    }
+
+    /* 
+        Phaser.Actions.GridAlign(this.deck, {
+        width: 4,
+        height: 1,
+        cellWidth: 80,
+        cellHeight: 150,
+        x: 100,
+        y: 400
+    */
 }

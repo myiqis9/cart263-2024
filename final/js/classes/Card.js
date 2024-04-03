@@ -15,9 +15,9 @@ class Card {
         this.description = `HP: ${this.hp} ATK: ${this.atk} \n${this.ability}`;
 
         //wellness stats
-        this.happiness = 5;
+        this.joy = 5;
         this.hunger = 5;
-        this.exhaustion = 5;
+        this.energy = 5;
     }
 
     //create the container for the card
@@ -36,11 +36,31 @@ class Card {
         //create container that has everything in the card
         this.container = this.scene.add.container(this.scene.game.config.width/2-150, -200, [this.scene.add.image(0, 0, 'bg'), this.scene.add.image(0, 0, this.name),
         this.hpTxt, this.atkTxt]);
+
+        this.container.setSize(165, 177); //interaction box
+        this.container.setInteractive(); //makes them able to interact
     }
 
     //updates HP/ATK values on the card display
     updateValues() {
         this.hpTxt.setText(this.hp);
         this.atkTxt.setText(this.atk);
+    }
+
+    //damage taken in battle
+    takeDamage() {
+        //loses health
+        this.hp--;
+        this.updateValues();
+
+        //has a 70% chance to lose happiness every time it's hit
+        let lose = Phaser.Math.Between(1, 10);
+        console.log(`joy randomizer: ${lose}`);
+        if(lose > 3) this.joy--;
+    }
+
+    //died in battle
+    died(scene) {
+
     }
 }

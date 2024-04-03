@@ -7,6 +7,7 @@ class Enemy {
 
         this.container = null;
         this.hpTxt = null;
+        this.died = false;
     }
 
     createContainer(scene) {
@@ -30,5 +31,18 @@ class Enemy {
     //updates HP value on the card display
     updateValues() {
         this.hpTxt.setText(this.hp);
+    }
+
+    takeDamage(dmg) {
+        this.hp -= dmg;
+        if(this.hp <= 0) {
+            this.hp = 0;
+            this.died = true;
+        }
+        this.updateValues();
+    }
+
+    die() {
+
     }
 }
