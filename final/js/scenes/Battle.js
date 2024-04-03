@@ -28,7 +28,7 @@ class Battle extends Phaser.Scene {
 
         //starter text when battle loads
         if(this.player.tutorial) this.player.text.setText(`NOW, ONTO BATTLE!`);
-        else this.player.text.setText(`YOUR PARTY RUNS INTO AN ENEMY!`);
+        else this.player.text.setText(`YOUR PARTY RUNS INTO AN ENEMY ${this.enemy.name.toUpperCase()}!`);
 
         setTimeout(() => {
             this.startBattle();
@@ -174,7 +174,7 @@ class Battle extends Phaser.Scene {
                     duration: 100,
                     onComplete: () => {
                         //if active card died then call function, else reset new turn
-                        if(this.active.hp <= 0) this.active.died(this);
+                        if(this.active.hp <= 0) this.activeDied();
                         else {
                             this.moves = 2;
                             this.reset();
@@ -209,6 +209,45 @@ class Battle extends Phaser.Scene {
         });
     }
 
+    activeDied() {
+        //died in battle
+        this.player.text.setText(`OH NO! ${this.active.name.toUpperCase()} DIED IN COMBAT!`);
+        this.tweens.add({
+            targets: this.active.container,
+            y: 210,
+            alpha: 0,
+            ease: 'Quintic.easeOut',
+            duration: 800,
+            onComplete: () => {
+                this.setNewActive();
+            }
+        });
+    }
+
+    setNewActive() {
+        this.active.container.destroy();
+        this.player.deck.splice(0, 1);
+        this.player.sortDeck();
+
+        if(this.player.deck.length > 0) {
+            //sets next first card in deck as new active
+            this.active = this.player.deck[0]; 
+
+            this.tweens.add({
+                //move active card to active slot
+                targets: this.active.container,
+                x: this.game.config.width/2-156,
+                y: 160,
+                duration: 200,
+                onComplete: () => {
+                    this.moves = 2;
+                    this.reset();
+                }
+            });
+        }
+        else this.lost();
+    }
+
     battleComplete() {
         //destroy current enemy to not take up space, sort player's deck and heal all cards
         this.enemy.container.destroy();
@@ -227,7 +266,9 @@ class Battle extends Phaser.Scene {
     }
 
     lost() {
-
+        setTimeout(() => {
+            this.player.text.setText(`YOU HAVE NO MORE CARDS TO PLAY! YOU HAVE LOST.`);
+        }, 1000);
     }
 
     updateText() {

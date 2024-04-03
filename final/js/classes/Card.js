@@ -58,9 +58,4 @@ class Card {
         console.log(`joy randomizer: ${lose}`);
         if(lose > 3) this.joy--;
     }
-
-    //died in battle
-    died(scene) {
-
-    }
 }
