@@ -62,15 +62,22 @@ class Battle extends Phaser.Scene {
         console.log('battle starts');
         this.player.canInteract = true;
         this.updateText(); 
+        this.setCardInteraction();
+    }
 
+    setCardInteraction() {
         for(let card of this.player.deck) {
+            //reset existing interaction
+            card.container.off('pointerdown');
+
             if(card == this.active) {
-                //click on active card
+                //click on active card to attack
                 card.container.on('pointerdown', () => {
                     if(this.player.canInteract) this.attack();
                 });
             }
             else {
+                //click on other cards in deck, to swap
                 card.container.on('pointerdown', () => {
                     if(this.player.canInteract) this.swap(card);
                 });
@@ -229,23 +236,28 @@ class Battle extends Phaser.Scene {
         this.player.deck.splice(0, 1);
         this.player.sortDeck();
 
-        if(this.player.deck.length > 0) {
-            //sets next first card in deck as new active
-            this.active = this.player.deck[0]; 
-
-            this.tweens.add({
-                //move active card to active slot
-                targets: this.active.container,
-                x: this.game.config.width/2-156,
-                y: 160,
-                duration: 200,
-                onComplete: () => {
-                    this.moves = 2;
-                    this.reset();
-                }
-            });
-        }
-        else this.lost();
+        //since the sortDeck takes a bit of time, I need to let it finish first before playing this.
+        setTimeout(() => {
+            if(this.player.deck.length > 0) {
+                //sets next first card in deck as new active
+                this.active = this.player.deck[0]; 
+                console.log(`setting ${this.active.name} as new active card`);
+    
+                this.tweens.add({
+                    //move active card to active slot
+                    targets: this.active.container,
+                    x: this.game.config.width/2-156,
+                    y: 160,
+                    duration: 200,
+                    onComplete: () => {
+                        this.setCardInteraction();
+                        this.moves = 2;
+                        this.reset();
+                    }
+                });
+            }
+            else this.lost(); 
+        }, 500);
     }
 
     battleComplete() {
@@ -253,6 +265,7 @@ class Battle extends Phaser.Scene {
         this.enemy.container.destroy();
         this.player.sortDeck();
         this.player.healAll();
+        this.moves = 2; //reset move count for next battle
 
         //remove all card interactions
         for(let card of this.player.deck) {
@@ -272,8 +285,8 @@ class Battle extends Phaser.Scene {
     }
 
     updateText() {
-        this.battleMenu = `JOY: ${this.active.joy} HUNGER: ${this.active.hunger} ENERGY: ${this.active.energy} \nYOU HAVE ${this.moves} MOVES LEFT.\n\nCLICK ON ACTIVE CARD TO ATTACK OR CLICK ON ANOTHER CARD TO SWAP.`;
+        this.menutxt = `JOY: ${this.active.joy} HUNGER: ${this.active.hunger} ENERGY: ${this.active.energy} \nYOU HAVE ${this.moves} MOVES LEFT.\n\nCLICK ON ACTIVE CARD TO ATTACK OR CLICK ON ANOTHER CARD TO SWAP.`;
 
-        this.player.text.setText(this.battleMenu);
+        this.player.text.setText(this.menutxt);
     }
 }

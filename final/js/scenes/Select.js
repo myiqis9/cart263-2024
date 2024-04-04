@@ -17,6 +17,9 @@ class Select extends Phaser.Scene {
 
     //create selection from all cards
     getCardSelection() {
+        //shuffle all cards
+        Phaser.Utils.Array.Shuffle(this.player.allCards);
+
         //grab first 3 as the starters
         this.cardSelection = [this.player.allCards[0], this.player.allCards[1], this.player.allCards[2]];
         console.log(this.cardSelection);
@@ -100,9 +103,6 @@ class Select extends Phaser.Scene {
 
         //add card to player deck
         this.player.deck.push(card);
-
-        //debug
-        console.log(this.cardSelection);
 
         //more tweening animations
         this.tweens.add({

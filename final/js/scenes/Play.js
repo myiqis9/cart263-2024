@@ -117,9 +117,8 @@ class Play extends Phaser.Scene {
             this.player.allEnemies.push(enemy);
         }
         
-        //lower all cards scale, then shuffle them
+        //lower all cards scale
         for(let card of this.player.allCards) card.container.setScale(0.7);
-        Phaser.Utils.Array.Shuffle(this.player.allCards);
 
         //testing
         console.log(this.player.allCards);

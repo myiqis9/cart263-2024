@@ -37,7 +37,8 @@ class Shop extends Phaser.Scene {
 
     goToBattle() {
         setTimeout(() => {
-            this.player.round++;
+            this.player.round++; //move player to next enemy round
+            this.player.selection = 2; //reset player selection for next shop
             this.scene.start('battle', this.player);
         }, 700);
     }
