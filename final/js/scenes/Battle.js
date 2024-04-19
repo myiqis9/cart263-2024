@@ -48,7 +48,7 @@ class Battle extends Phaser.Scene {
                     duration: 200
                 },
                 {
-                    //adds card to deck
+                    //move enemy into view
                     targets: this.enemy.container,
                     x: this.game.config.width/2+100,
                     duration: 1000,
@@ -132,10 +132,7 @@ class Battle extends Phaser.Scene {
                     onComplete: () => {
                         //if enemy died then go to win scenario, else enemy attacks back
                         if(this.enemy.died) this.enemyDefeated();
-                        else setTimeout(() => { 
-                            if(this.moves > 0) this.reset();
-                            else this.attacked(); 
-                        }, 200);
+                        else setTimeout(() => { this.checkMoves(); }, 200);
                     }
                 }
             ]
@@ -192,6 +189,11 @@ class Battle extends Phaser.Scene {
         });
     }
 
+    checkMoves() {
+        if(this.moves > 0) this.reset();
+        else this.attacked(); 
+    }
+
     reset() {
         //player can interact again now
         this.updateText();
@@ -199,7 +201,35 @@ class Battle extends Phaser.Scene {
     }
 
     swap(card) {
-        console.log('swapping!');
+        this.player.text.setText(`ENOUGH, ${this.active.name.toUpperCase()}! COME FORTH, ${card.name.toUpperCase()}!`);
+        this.player.canInteract = false;
+
+        let temp = card;
+
+        //change active to swapped card's position and swapped card to active
+        this.player.deck[this.player.deck.indexOf(card)] = this.active;
+        this.player.deck[0] = temp;
+        this.active = temp;
+
+        //sort deck again
+        this.player.sortDeck();
+
+        //move active card to active slot
+        setTimeout(() => {
+            this.tweens.add({
+                //move active card to active slot
+                targets: this.active.container,
+                x: this.game.config.width/2-156,
+                y: 160,
+                duration: 200,
+                onComplete: () => {
+                    //reset card interactions && use up move
+                    this.setCardInteraction();
+                    this.moves--;
+                    this.checkMoves();
+                }
+            });
+        }, 500);
     }
 
     enemyDefeated() {
