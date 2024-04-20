@@ -75,14 +75,4 @@ class Player {
             card.updateValues();
         }
     }
-
-    /* 
-        Phaser.Actions.GridAlign(this.deck, {
-        width: 4,
-        height: 1,
-        cellWidth: 80,
-        cellHeight: 150,
-        x: 100,
-        y: 400
-    */
 }

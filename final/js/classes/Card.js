@@ -56,6 +56,48 @@ class Card {
         //has a 70% chance to lose happiness every time it's hit
         let lose = Phaser.Math.Between(1, 10);
         console.log(`joy randomizer: ${lose}`);
-        if(lose > 3) this.joy--;
+        if(lose > 3 && this.joy > 0) this.joy--;
+    }
+
+    //checks happiness 
+    isHappy() {
+        if(this.joy == 0) {
+
+        }
+    }
+
+    //check exhaustion & hunger
+    isFedRested() {
+
+    }
+
+    //individual skills and special events for each card will be contained here
+
+    kasa() {
+
+    }
+
+    emu() {
+        
+    }
+
+    rui() {
+
+    }
+
+    mafu() {
+
+    }
+
+    mizu() {
+
+    }
+
+    kana() {
+
+    }
+
+    saki() {
+
     }
 }

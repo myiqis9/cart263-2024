@@ -8,6 +8,7 @@ class Enemy {
         this.container = null;
         this.hpTxt = null;
         this.died = false;
+        this.overkill = 0;
     }
 
     createContainer(scene) {
@@ -36,6 +37,10 @@ class Enemy {
     takeDamage(dmg) {
         this.hp -= dmg;
         if(this.hp <= 0) {
+            //first checks for overkill damage to convert it to extra coins
+            if(this.hp < 0) {
+                this.overkill = (this.hp * -1); //sets overkill dmg to positive value
+            }
             this.hp = 0;
             this.died = true;
         }

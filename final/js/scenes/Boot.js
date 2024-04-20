@@ -9,8 +9,10 @@ class Boot extends Phaser.Scene {
         //all images
         //character sprites are not mine. they're taken from the mobile game Project Sekai: Colorful Stage!
         //copyright Colorful Palette https://www.colorfulstage.com/ I'm just using them for fun as filler
+        //the text boxes were made by me!
         this.load.image('textbox', 'assets/images/textbox.png');
         this.load.image('bg', 'assets/images/bg.png');
+        this.load.image('button', 'assets/images/button.png');
         this.load.image('saki', 'assets/images/saki.png');
         this.load.image('emu', 'assets/images/emu.png');
         this.load.image('kasa', 'assets/images/kasa.png');
