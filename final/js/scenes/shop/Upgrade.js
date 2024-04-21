@@ -32,6 +32,7 @@ class Upgrade extends Phaser.Scene {
 
     UIappear() {
         this.player.backToShop(this);
+        this.player.text.setText('SELECT WHICH PARTY MEMBER TO UPGRADE.');
 
         //text displayed on the screen
         this.cText = this.add.text(this.game.config.width/2, this.game.config.height/2+10, `COINS: ${this.player.coins}`, this.player.param1).setAlpha(0);
@@ -54,11 +55,32 @@ class Upgrade extends Phaser.Scene {
         }
     }
 
-    upgrading() {
-        
+    upgrading(card) {
+        if(this.success()) {
+            if(this.up == 'ATK') card.atk++;
+            if(this.up == 'HP') { card.hp++; card.maxhp++; }
+        }
+        else {
+
+        }
     }
 
+    //upgrades have only a 40% chance of succeeding. if they fail, the card also loses joy!
+    //they're therefore cheap but also fair. and you must absolutely NEVER upgrade kasa
+    success() {
+        let pass = Phaser.Math.Between(1, 10);
+        if(pass > 4) return false;
+        else return true;
+    }
+
+    //remove scene specific UI
     UIremove() {
-        
+        this.tweens.add({
+            targets: [this.cText, this.upText],
+            alpha: 0,
+            duration: 100
+        });
+        this.cText.destroy();
+        this.upText.destroy();
     }
 }

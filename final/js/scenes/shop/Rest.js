@@ -115,12 +115,13 @@ class Rest extends Phaser.Scene {
 
     raiseRest() {
         for(let c of this.player.deck) {
-            c.energy++;
-            if(c.energy > 5) c.energy = 5;
+            if(c.energy < 5) c.energy++;
+            if(c.joy < 5) c.joy++;
         }
         this.player.text.setText('YOUR PARTY FEELS A LITTLE MORE RESTED.');
     }
 
+    //remove scene specific UI
     UIremove() {
         clearInterval(this.interv);
 

@@ -83,6 +83,7 @@ class Feed extends Phaser.Scene {
         }
     }
 
+    //remove scene specific UI
     UIremove() {
         this.tweens.add({
             targets: this.cText,

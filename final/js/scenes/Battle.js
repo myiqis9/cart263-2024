@@ -152,7 +152,30 @@ class Battle extends Phaser.Scene {
         this.moves--;
         this.player.text.setText(`${this.active.name.toUpperCase()} IS TOO SCARED. IT REFUSES TO FIGHT!`);
 
-        setTimeout(() => { this.checkMoves(); }, 500);
+        //little scared animation
+        this.tweens.chain({
+            tweens: [
+                {
+                    targets: this.enemy.container,
+                    x: this.game.config.width/2-220,
+                    duration: 70,
+                    onComplete: () => { this.active.takeDamage() }
+                },
+                {
+                    targets: this.active.container,
+                    x: this.game.config.width/2-220,
+                    ease: 'Quintic.easeInOut',
+                    duration: 90
+                },
+                {
+                    targets: this.active.container,
+                    x: this.game.config.width/2-156,
+                    ease: 'Quintic.easeInOut',
+                    duration: 70,
+                    onComplete: () => { this.checkMoves(); }
+                }
+            ]
+        });
     }
 
     attacked() {
