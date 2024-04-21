@@ -6,11 +6,13 @@ class Shop extends Phaser.Scene {
         });
 
         this.btnTxt = [
-            ["FEED", "MIN 1 COIN"],
-            ["REST", "10 MINUTES"],
-            ["UPGRADE", "MIN 1 COIN"],
-            ["ROLL NEW", "5 COINS"],
+            ["FEED", "MIN 1 COIN", 'Button description here'],
+            ["REST", "10 MINUTES", 'Button description here'],
+            ["UPGRADE", "MIN 1 COIN", 'Button description here'],
+            ["ROLL NEW", "5 COINS", 'Button description here'],
         ];
+
+        this.lack = 'YOU LACK THE REQUIRED AMOUNT OF COINS!';
 
         this.buttons = [];
     }
@@ -49,7 +51,7 @@ class Shop extends Phaser.Scene {
                     btnbg.setTint(0x87adb3);
                     btntxt1.setTint(0x87adb3);
                     btntxt2.setTint(0x87adb3);
-                    this.player.text.setText('Button description here');
+                    this.player.text.setText(btn[2]);
                 }
             });
 
@@ -83,7 +85,7 @@ class Shop extends Phaser.Scene {
         this.buttons[0].on('pointerdown', () => {
             if(this.player.canInteract) {
                 if(this.player.coins > 0) this.feed();
-                else this.player.text.setText(`YOU LACK THE REQUIRED AMOUNT OF COINS!`);
+                else this.player.text.setText(this.lack);
             }
         });
 
@@ -98,7 +100,7 @@ class Shop extends Phaser.Scene {
         this.buttons[2].on('pointerdown', () => {
             if(this.player.canInteract) {
                 if(this.player.coins > 0) this.upgrade();
-                else this.player.text.setText(`YOU LACK THE REQUIRED AMOUNT OF COINS!`);
+                else this.player.text.setText(this.lack);
             }
         });
 
@@ -107,7 +109,7 @@ class Shop extends Phaser.Scene {
             if(this.player.canInteract) {
                 if(this.player.coins >= 5 && this.player.deck.length < 3) this.roll();
                 else if(this.player.deck.length == 3) this.player.text.setText(`SORRY, YOUR PARTY IS FULL!`);
-                else this.player.text.setText(`YOU LACK THE REQUIRED AMOUNT OF COINS!`);
+                else this.player.text.setText(this.lack);
             }
         });
     }

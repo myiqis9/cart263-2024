@@ -16,10 +16,12 @@ class Rest extends Phaser.Scene {
 
         setTimeout(() => {
             this.UIappear();
-        }, 100);
+        }, 150);
     }
 
     UIappear() {
         this.player.backToShop(this);
+
+        this.timer = this.add.text(this.game.config.width/2, this.game.config.height/2+10, `COINS: ${this.player.coins}`, this.player.param1);
     }
 }
