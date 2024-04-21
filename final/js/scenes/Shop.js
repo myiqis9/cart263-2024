@@ -6,10 +6,10 @@ class Shop extends Phaser.Scene {
         });
 
         this.btnTxt = [
-            ["FEED", "MIN 1 COIN", 'Button description here'],
-            ["REST", "10 MINUTES", 'Button description here'],
-            ["UPGRADE", "MIN 1 COIN", 'Button description here'],
-            ["ROLL NEW", "5 COINS", 'Button description here'],
+            ["FEED", "MIN 1 COIN", "FEED YOUR PARTY. FOOD WILL COST 1 COIN PER HUNGER LEVEL FOR EACH PARTY MEMBER."],
+            ["REST", "~10 MINUTES", "LEAVE YOUR PARTY TO REST IN ORDER TO RESTORE THEIR ENERGY."],
+            ["UPGRADE", "MIN 1 COIN", "UPGRADE YOUR PARTY"],
+            ["ROLL NEW", "5 COINS", "Button description here"]
         ];
 
         this.lack = 'YOU LACK THE REQUIRED AMOUNT OF COINS!';

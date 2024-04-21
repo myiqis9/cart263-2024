@@ -53,7 +53,7 @@ class Play extends Phaser.Scene {
             name: 'mizu',
             hp: 5,
             atk: 5,
-            ability: `DOUBLES TIME TO REST FROM EXHAUSTION, BUT LOWERS THE COST OF FOOD.`
+            ability: `DOUBLES TIME TO REST FROM EXHAUSTION, BUT DOUBLES FOOD REWARDS.`
         }
         ];
 

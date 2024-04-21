@@ -183,6 +183,7 @@ class Player {
     backPressed(sc) {
         this.canInteract = false;
         this.text.setText('');
+        sc.UIremove();
 
         sc.tweens.add({
             targets: this.backBtn,

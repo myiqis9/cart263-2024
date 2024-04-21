@@ -82,10 +82,6 @@ class Card {
 
     //individual skills and special events for each card will be contained here
 
-    kasa() {
-
-    }
-
     emu() {
         
     }
@@ -95,10 +91,6 @@ class Card {
     }
 
     mafu() {
-
-    }
-
-    mizu() {
 
     }
 

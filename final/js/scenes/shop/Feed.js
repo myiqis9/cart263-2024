@@ -16,10 +16,14 @@ class Feed extends Phaser.Scene {
 
         setTimeout(() => {
             this.UIappear();
-        }, 100);
+        }, 200);
     }
 
     UIappear() {
         this.player.backToShop(this);
+    }
+
+    UIremove() {
+        
     }
 }
