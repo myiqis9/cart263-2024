@@ -28,6 +28,10 @@ class Player {
         //list of all enemies
         this.allEnemies = [];
 
+        //does the player have saki in their party?
+        //relevant because of saki's ability towards all cards
+        this.hasSaki = false;
+        
         //textbox
         this.textbox = null;
 
@@ -60,7 +64,7 @@ class Player {
             color: '#548087',
             align: 'left',
             lineSpacing: 10,
-            wordWrap: { width: 380 }
+            wordWrap: { width: 375 }
         });
 
         this.textbox = this.scene.add.container(this.scene.game.config.width/2+80, 400, [txtImg, this.text]);
@@ -114,6 +118,8 @@ class Player {
         }
     }
 
+    //default interaction across all shop screens (except card select)
+    //in which hovering over a card shows its stats
     defaultInteractions() {
         for(let card of this.deck) {
             card.container.on('pointerover', () => { 
@@ -126,6 +132,8 @@ class Player {
         }
     }
 
+    //reset card interactions at the end of each scene, 
+    //so they don't intervene with another interaction
     removeInteractions() {
         for(let card of this.deck) {
             console.log(`${card.name} off`);

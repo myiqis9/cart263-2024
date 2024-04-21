@@ -52,15 +52,28 @@ class Card {
     }
 
     //damage taken in battle
-    takeDamage() {
+    //needs player param to call lowerJoy
+    takeDamage(saki) {
         //loses health
         this.hp--;
         this.updateValues();
 
-        //has a 70% chance to lose happiness every time it's hit
+        //has a 80% chance to lose happiness every time it's hit
         let lose = Phaser.Math.Between(1, 10);
         console.log(`joy randomizer: ${lose}`);
-        if(lose > 3 && this.joy > 0) this.joy--;
+        if(lose > 2) this.lowerJoy(saki);
+    }
+
+    //lower card's joy. this will always take param player.hasSaki when it's called
+    //because saki makes all cards in party never reach minimum joy
+    lowerJoy(saki) {
+        if(saki) {
+            console.log('has saki!');
+            if(this.joy > 1) this.joy--;
+        }
+        else {
+            if(this.joy > 0) this.joy--;
+        }
     }
 
     //checks happiness 

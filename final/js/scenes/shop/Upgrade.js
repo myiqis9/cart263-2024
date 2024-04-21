@@ -15,6 +15,7 @@ class Upgrade extends Phaser.Scene {
 
     create() {
         this.player.displayDeck();
+        this.player.defaultInteractions();
         this.flipCoin();
 
         setTimeout(() => {
@@ -56,19 +57,68 @@ class Upgrade extends Phaser.Scene {
     }
 
     upgrading(card) {
+        //it costs two coins no matter if it succeeds or fails
+        this.player.coins -= 2;
+
         if(this.success()) {
             if(this.up == 'ATK') card.atk++;
             if(this.up == 'HP') { card.hp++; card.maxhp++; }
+            card.updateValues();
+
+            //little happy animation
+            this.tweens.add({
+                targets: card.container,
+                y: 150,
+                duration: 80,
+                yoyo: true,
+                loop: 1,
+                onComplete: () => { this.player.canInteract = true; }
+            });
+
+            this.player.text.setText(`${card.name.toUpperCase()} IS ALL POWERED UP!`);
         }
         else {
+            //loses happiness if failed
+            if(card.joy > 0) card.lowerJoy(this.player.hasSaki);
+            let tempx = card.container.x;
 
+            //little unhappy animation
+            this.tweens.chain({
+                tweens: [
+                    {
+                        targets: card.container,
+                        x: tempx-15,
+                        ease: 'Quintic.easeInOut',
+                        duration: 30
+                    },
+                    {
+                        targets: card.container,
+                        x: tempx+15,
+                        ease: 'Quintic.easeInOut',
+                        duration: 40,
+                        yoyo: true,
+                        repeat: 1
+                    },
+                    {
+                        targets: card.container,
+                        x: tempx,
+                        ease: 'Quintic.easeInOut',
+                        duration: 30
+                    },
+                ]
+            });
+
+            this.player.text.setText(`OH NO! THE UPGRADE FAILED.`);
         }
+        //update coins display
+        this.cText.setText(`COINS: ${this.player.coins}`);
     }
 
     //upgrades have only a 40% chance of succeeding. if they fail, the card also loses joy!
     //they're therefore cheap but also fair. and you must absolutely NEVER upgrade kasa
     success() {
         let pass = Phaser.Math.Between(1, 10);
+        console.log(`upgrade success: ${pass}`);
         if(pass > 4) return false;
         else return true;
     }

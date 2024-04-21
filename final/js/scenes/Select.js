@@ -105,6 +105,9 @@ class Select extends Phaser.Scene {
         //add card to player deck
         this.player.deck.push(card);
 
+        //if its saki, then set hasSaki to true
+        if(card.name === 'saki') this.player.hasSaki = true;
+
         //more tweening animations
         this.tweens.add({
             //other two cards go back oob

@@ -158,8 +158,7 @@ class Battle extends Phaser.Scene {
                 {
                     targets: this.enemy.container,
                     x: this.game.config.width/2-220,
-                    duration: 70,
-                    onComplete: () => { this.active.takeDamage() }
+                    duration: 70
                 },
                 {
                     targets: this.active.container,
@@ -189,7 +188,7 @@ class Battle extends Phaser.Scene {
                     targets: this.enemy.container,
                     x: this.game.config.width/2+85,
                     duration: 70,
-                    onComplete: () => { this.active.takeDamage() }
+                    onComplete: () => { this.active.takeDamage(this.player.hasSaki) }
                 },
                 {
                     targets: this.active.container,
@@ -315,6 +314,7 @@ class Battle extends Phaser.Scene {
     }
 
     setNewActive() {
+        if(this.active.name === 'saki') this.player.hasSaki = false;
         this.active.container.destroy();
         this.player.deck.splice(0, 1);
         this.player.sortDeck();
