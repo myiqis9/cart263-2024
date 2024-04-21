@@ -30,7 +30,7 @@ class Rest extends Phaser.Scene {
     checkAbilities() {
         for(let c of this.player.deck) {
             if(c.name === 'mizu') this.base = this.base*2;
-            if(c.name === 'kasa') this.base = this.base/2;
+            else if(c.name === 'kasa') this.base = this.base/2;
         }
         this.minutes = this.base;
         console.log(`base: ${this.base}`);

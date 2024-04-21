@@ -188,7 +188,7 @@ class Battle extends Phaser.Scene {
                     targets: this.enemy.container,
                     x: this.game.config.width/2+85,
                     duration: 70,
-                    onComplete: () => { this.active.takeDamage(this.player.hasSaki) }
+                    onComplete: () => { this.active.takeDamage(this.player) }
                 },
                 {
                     targets: this.active.container,
@@ -288,11 +288,20 @@ class Battle extends Phaser.Scene {
     bounty() {
         let reward;
 
+        //gain set amount of coins each round. overkill dmg transfers into bonus coins
         switch(this.player.round) {
             case 0: reward = 0;
-            case 1: case 2: reward = 2;
-            case 3: case 4: reward = 3;
+            break;
+            case 1: reward = 2;
+            break;
+            case 2: reward = 4;
+            break;
+            case 3: reward = 5;
+            break;
+            case 4: reward = 6;
+            break;
         }
+        console.log(`reward ${reward} + overkill ${this.enemy.overkill}`);
         reward += this.enemy.overkill;
         this.player.coins += reward;
         return reward;
@@ -352,6 +361,9 @@ class Battle extends Phaser.Scene {
 
             if(card.name === 'emu') card.hunger--; //emu gets hungry faster
             if(card.name === 'mafu') card.energy--; //mafu gets exhausted faster
+
+            if(card.hunger < 0) card.hunger = 0;
+            if(card.energy < 0) card.energy = 0;
         }
         this.battleComplete();
     }

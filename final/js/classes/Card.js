@@ -52,16 +52,27 @@ class Card {
     }
 
     //damage taken in battle
-    //needs player param to call lowerJoy
-    takeDamage(saki) {
-        //loses health
-        this.hp--;
+    //needs player param for damage amount and hasSaki
+    takeDamage(player) {
+        //loses health depending on which round it is, as enemies deal incrementally more damage
+        let dmg;
+        switch(player.round) {
+            case 0: case 1: dmg = 1;
+            break;
+            case 2: case 3: case 4: dmg = 2;
+            break;
+            case 5: dmg = 3;
+            break;
+        }
+
+        this.hp -= dmg;
+        if(this.hp < 0) this.hp = 0;
         this.updateValues();
 
         //has a 80% chance to lose happiness every time it's hit
         let lose = Phaser.Math.Between(1, 10);
         console.log(`joy randomizer: ${lose}`);
-        if(lose > 2) this.lowerJoy(saki);
+        if(lose > 2) this.lowerJoy(player.hasSaki);
     }
 
     //lower card's joy. this will always take param player.hasSaki when it's called
@@ -94,7 +105,6 @@ class Card {
     }
 
     //individual skills and special events for each card will be contained here
-
     emu() {
         
     }
@@ -104,14 +114,6 @@ class Card {
     }
 
     kasa() {
-
-    }
-
-    mafu() {
-
-    }
-
-    kana() {
 
     }
 }

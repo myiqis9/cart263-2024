@@ -15,7 +15,7 @@ class Play extends Phaser.Scene {
         },
         {
             name: 'emu',
-            hp: 6,
+            hp: 5,
             atk: 6, 
             ability: `HIGH STATS, BUT GETS HUNGRY QUICKLY. IT WILL CANNIBALIZE OTHER PARTY MEMBERS IF IT HAS TO.`
         },
@@ -46,12 +46,12 @@ class Play extends Phaser.Scene {
         {
             name: 'mafu',
             hp: 4,
-            atk: 5,
+            atk: 4,
             ability: `CAN KEEP FIGHTING AT LOW HAPPINESS, BUT DRAINS FAST IN EXHAUSTION.`
         },
         {
             name: 'mizu',
-            hp: 5,
+            hp: 4,
             atk: 5,
             ability: `DOUBLES TIME TO REST FROM EXHAUSTION, BUT DOUBLES FOOD REWARDS.`
         }
@@ -66,31 +66,31 @@ class Play extends Phaser.Scene {
             },
             {
                 name: 'dodo',
-                hp: 22,
+                hp: 36,
                 x: 45,
                 y: 64
             },
             {
                 name: 'horse',
-                hp: 26,
+                hp: 40,
                 x: 55,
                 y: 72
             },
             {
                 name: 'clock',
-                hp: 32,
+                hp: 52,
                 x: 65,
                 y: 95
             },
             {
                 name: 'crusher',
-                hp: 38,
+                hp: 61,
                 x: 45,
                 y: 75
             },
             {
                 name: 'mage',
-                hp: 55,
+                hp: 75,
                 x: 45,
                 y: 40
             }

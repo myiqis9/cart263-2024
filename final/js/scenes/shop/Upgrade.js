@@ -50,15 +50,23 @@ class Upgrade extends Phaser.Scene {
 
         for(let card of this.player.deck) {
             card.container.on('pointerdown', () => {
-                if(this.player.coins > 1) this.upgrading(card);
+                if(this.player.coins > 1) this.canUpgrade(card);
                 else this.player.text.setText(`SORRY, YOU'RE OUT OF COINS!`);
             });
         }
     }
 
+    canUpgrade(card) {
+        if(card.joy == 0) this.player.text.setText(`THIS CARD IS TOO UNHAPPY. IT REFUSES THE UPGRADE.`);
+        else if(this.up == 'ATK' && card.atk == 9 || this.up == 'HP' && card.hp == 9)
+            this.player.text.setText(`THIS CARD IS ALREADY AT MAX ${this.up}!`);
+        else this.upgrading(card);
+    }
+
     upgrading(card) {
         //it costs two coins no matter if it succeeds or fails
         this.player.coins -= 2;
+        this.player.canInteract = false;
 
         if(this.success()) {
             if(this.up == 'ATK') card.atk++;
@@ -112,6 +120,7 @@ class Upgrade extends Phaser.Scene {
         }
         //update coins display
         this.cText.setText(`COINS: ${this.player.coins}`);
+        this.player.canInteract = true;
     }
 
     //upgrades have only a 40% chance of succeeding. if they fail, the card also loses joy!

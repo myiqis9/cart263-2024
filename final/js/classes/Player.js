@@ -64,7 +64,7 @@ class Player {
             color: '#548087',
             align: 'left',
             lineSpacing: 10,
-            wordWrap: { width: 375 }
+            wordWrap: { width: 374 }
         });
 
         this.textbox = this.scene.add.container(this.scene.game.config.width/2+80, 400, [txtImg, this.text]);
