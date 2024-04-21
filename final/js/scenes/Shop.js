@@ -6,9 +6,9 @@ class Shop extends Phaser.Scene {
         });
 
         this.btnTxt = [
-            ["FEED", "1 COIN"],
-            ["REST", "10 MIN"],
-            ["UPGRADE", "1 COIN"],
+            ["FEED", "MIN 1 COIN"],
+            ["REST", "10 MINUTES"],
+            ["UPGRADE", "MIN 1 COIN"],
             ["ROLL NEW", "5 COINS"],
         ];
 
@@ -23,36 +23,24 @@ class Shop extends Phaser.Scene {
     create() {
         //if you've gotten to the shop, then the tutorial sequence is over
         if(this.player.tutorial) this.player.tutorial = false;
+        this.player.canInteract = false;
+        this.player.defaultInteractions();
         this.createButtons();
         this.checkMoves();
     }
 
     createButtons() {
-        const param1 = {
-            fontFamily: 'pstart',
-            fontSize: 15,
-            color: '#548087',
-            align: 'center'
-        };
-
-        const param2 = {
-            fontFamily: 'pstart',
-            fontSize: 11,
-            color: '#548087',
-            align: 'center'
-        };
-
         //create each button
         for(let btn of this.btnTxt) {
             let btnbg = this.add.image(0, 0, 'button');
-            let btntxt1 = this.add.text(0, -10, btn[0], param1).setOrigin(0.5);
-            let btntxt2 = this.add.text(0, 15, btn[1], param2).setOrigin(0.5);
+            let btntxt1 = this.add.text(0, -10, btn[0], this.player.param1).setOrigin(0.5);
+            let btntxt2 = this.add.text(0, 15, btn[1], this.player.param2).setOrigin(0.5);
 
-            let newBtn = this.add.container(0, 0, [btnbg, btntxt1, btntxt2]).setAlpha(100);
+            let newBtn = this.add.container(0, 0, [btnbg, btntxt1, btntxt2]).setAlpha(0);
             newBtn.setScale(0.9);
 
             //make button interactive
-            newBtn.setSize(175, 75); //interaction box
+            newBtn.setSize(174, 74); //interaction box
             newBtn.setInteractive(); //makes them able to interact
 
             //hovering shows more info and tints container
@@ -78,33 +66,55 @@ class Shop extends Phaser.Scene {
             this.buttons.push(newBtn);
         }
 
+        //coins amount
+        let cText = this.add.text(this.game.config.width/2, this.game.config.height/2+10, `COINS: ${this.player.coins}`, this.player.param1);
+        cText.setAlpha(0);
+        cText.setOrigin(0.5);
+        this.buttons.push(cText);
+
         //reposition them properly
         this.buttons[0].setPosition(this.game.config.width/2-100, this.game.config.height/2-150);
         this.buttons[1].setPosition(this.game.config.width/2-100, this.game.config.height/2-60);
         this.buttons[2].setPosition(this.game.config.width/2+100, this.game.config.height/2-150);
         this.buttons[3].setPosition(this.game.config.width/2+100, this.game.config.height/2-60);
         
-        //usability
+        //usability to buttons
+        //feed
         this.buttons[0].on('pointerdown', () => {
-            if(this.player.canInteract) this.feed();
+            if(this.player.canInteract) {
+                if(this.player.coins > 0) this.feed();
+                else this.player.text.setText(`YOU LACK THE REQUIRED AMOUNT OF COINS!`);
+            }
         });
 
+        //rest
         this.buttons[1].on('pointerdown', () => {
-            if(this.player.canInteract) this.rest();
+            if(this.player.canInteract) {
+                this.rest();
+            }
         });
 
+        //upgrade
         this.buttons[2].on('pointerdown', () => {
-            if(this.player.canInteract) this.upgrade();
+            if(this.player.canInteract) {
+                if(this.player.coins > 0) this.upgrade();
+                else this.player.text.setText(`YOU LACK THE REQUIRED AMOUNT OF COINS!`);
+            }
         });
 
+        //roll
         this.buttons[3].on('pointerdown', () => {
-            if(this.player.canInteract) this.roll();
+            if(this.player.canInteract) {
+                if(this.player.coins >= 5 && this.player.deck.length < 3) this.roll();
+                else if(this.player.deck.length == 3) this.player.text.setText(`SORRY, YOUR PARTY IS FULL!`);
+                else this.player.text.setText(`YOU LACK THE REQUIRED AMOUNT OF COINS!`);
+            }
         });
     }
 
     checkMoves() {
         if(this.player.selection > 0) {
-            this.player.text.setText(`WELCOME TO THE SHOP!`);
+            this.player.text.setText(`WELCOME TO THE SHOP! \nHOVER OVER ANYTHING FOR MORE INFORMATION.`);
             this.displayShop();
         }
         else {
@@ -113,31 +123,85 @@ class Shop extends Phaser.Scene {
     }
 
     displayShop() {
-        this.player.canInteract = true;
-        console.log('hi');
+        //buttons appear
+        for(let button of this.buttons) {
+            this.tweens.add({
+                targets: button,
+                alpha: 1,
+                duration: 150,
+                onComplete: () => { this.player.canInteract = true; }
+            });
+        }
+
+        console.log(this.buttons);
     }
 
     feed() {
         console.log('feed');
+        this.destroyAll();
+
+        //change to shop scene
+        setTimeout(() => {
+            this.scene.start('feed', this.player);
+        }, 500);
     }
 
     rest() {
         console.log('rest');
+        this.destroyAll();
+
+        //change to shop scene
+        setTimeout(() => {
+            this.scene.start('rest', this.player);
+        }, 500);
     }
 
     upgrade() {
         console.log('upgrade');
+        this.destroyAll();
+
+        //change to shop scene
+        setTimeout(() => {
+            this.scene.start('upgrade', this.player);
+        }, 500);
     }
 
     roll() {
         console.log('roll');
+        this.destroyAll();
+        this.player.coins -= 5;
+
+        //change to shop scene
+        setTimeout(() => {
+            this.scene.start('select', this.player);
+        }, 500);
+    }
+
+    destroyAll() {
+        //delete all buttons to avoid clutter
+        for(let button of this.buttons) {
+            this.tweens.add({
+                targets: button,
+                alpha: 0,
+                duration: 150,
+                onComplete: () => { button.destroy(); }
+            });
+        }
+
+        //remove all card interactions
+        this.player.removeInteractions();
+
+        this.buttons = [];
+        this.player.text.setText('');
     }
 
     goToBattle() {
+        this.destroyAll();
+
         setTimeout(() => {
             this.player.round++; //move player to next enemy round
             this.player.selection = 2; //reset player selection for next shop
             this.scene.start('battle', this.player);
-        }, 700);
+        }, 500);
     }
 }

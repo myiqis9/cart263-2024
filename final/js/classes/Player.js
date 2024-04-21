@@ -33,12 +33,28 @@ class Player {
 
         //textbox text
         this.text;
+
+        //parameters for button text
+        this.param1 = {
+            fontFamily: 'pstart',
+            fontSize: 15,
+            color: '#548087'
+        };
+
+        this.param2 = {
+            fontFamily: 'pstart',
+            fontSize: 11,
+            color: '#548087'
+        };
+
+        //back button that will be consistent throughout many scenes
+        this.backBtn;
     }
     
     createTextbox() {
         let txtImg = this.scene.add.image(0, 0, 'textbox');
 
-        this.text = this.scene.add.text(-175, -65, `PICK A STARTER CARD.`, {
+        this.text = this.scene.add.text(-180, -65, `PICK A STARTER CARD.`, {
             fontFamily: 'pstart',
             fontSize: 13,
             color: '#548087',
@@ -69,10 +85,119 @@ class Player {
         }
     }
 
+    //for feed, upgrade and rest scenes, cards get displayed evenly differently in the middle
+    //depending on how many cards are in your deck
+    displayDeck() {
+        let xPoint = 0;
+        
+        //determine where first card would display (x) depending on amount of cards
+        if(this.deck.length == 1) xPoint = this.scene.game.config.width/2;
+        if(this.deck.length == 2) xPoint = this.scene.game.config.width/2-75;
+        if(this.deck.length == 3) xPoint = this.scene.game.config.width/2-150;
+
+        //place cards in center
+        for(let card of this.deck) {
+            this.scene.tweens.add({
+                targets: card.container,
+                    x: xPoint,
+                    y: 175,
+                    duration: 200
+            });
+            xPoint += 150;
+        }
+    }
+
     healAll() {
         for(let card of this.deck) {
             card.hp = card.maxhp;
             card.updateValues();
         }
+    }
+
+    defaultInteractions() {
+        for(let card of this.deck) {
+            card.container.on('pointerover', () => { 
+                this.text.setText(card.stats());
+            });
+
+             card.container.on('pointerout', () => { 
+                this.text.setText('');
+            });
+        }
+    }
+
+    removeInteractions() {
+        for(let card of this.deck) {
+            console.log(`${card.name} off`);
+            card.container.off('pointerdown');
+            card.container.off('pointerover');
+            card.container.off('pointerout');
+        }
+    }
+
+    backToShop(sc) {
+        let btnbg = sc.add.image(0, 0, 'button');
+        let btntxt1 = sc.add.text(0, -10, 'RETURN', this.param1).setOrigin(0.5);
+        let btntxt2 = sc.add.text(0, 15, 'BACK TO SHOP?', this.param2).setOrigin(0.5);
+
+        this.backBtn = sc.add.container(125, 400, [btnbg, btntxt1, btntxt2]).setAlpha(0);
+        this.backBtn.setScale(0.9);
+
+        //make button interactive
+        this.backBtn.setSize(174, 74); //interaction box
+        this.backBtn.setInteractive(); //makes them able to interact
+
+        //hovering tints container
+        this.backBtn.on('pointerover', () => {
+            if(this.canInteract) {
+                btnbg.setTint(0x87adb3);
+                btntxt1.setTint(0x87adb3);
+                btntxt2.setTint(0x87adb3);
+            }
+        });
+
+        //cancel hover
+        this.backBtn.on('pointerout', () => {
+            if(this.canInteract) {
+                btnbg.clearTint();
+                btntxt1.clearTint();
+                btntxt2.clearTint();
+            }
+        });
+
+        //clicking returns to shop
+        this.backBtn.on('pointerdown', () => {
+            if(this.canInteract) {
+                this.backPressed(sc);
+            }
+        });
+
+        //make button appear
+        sc.tweens.add({
+            targets: this.backBtn,
+            alpha: 1,
+            duration: 150
+        });
+    }
+
+    backPressed(sc) {
+        this.canInteract = false;
+        this.text.setText('');
+
+        sc.tweens.add({
+            targets: this.backBtn,
+            alpha: 0,
+            duration: 100
+        });
+        this.backBtn.destroy();
+
+        //put deck back at the bottom, remove 1 select
+        this.sortDeck();
+        this.selection--;
+
+        //back to shop scene
+        setTimeout(() => {
+            sc.scene.start('shop', sc.player);
+        }, 400);
     }
 }

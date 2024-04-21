@@ -89,6 +89,7 @@ class Select extends Phaser.Scene {
 
         for(let c of this.cardSelection) {
             //remove event listeners of the cards from this scene
+            //I can't use the player one here, it has to include the selection
             c.container.off('pointerover');
             c.container.off('pointerout');
             c.container.off('pointerdown');

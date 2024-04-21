@@ -41,6 +41,10 @@ class Card {
         this.container.setInteractive(); //makes them able to interact
     }
 
+    stats() {
+        return `JOY: ${this.joy} HUNGER: ${this.hunger} ENERGY: ${this.energy} \n${this.ability}`;
+    }
+
     //updates HP/ATK values on the card display
     updateValues() {
         this.hpTxt.setText(this.hp);
@@ -62,8 +66,13 @@ class Card {
     //checks happiness 
     isHappy() {
         if(this.joy == 0) {
-
+            //has a 70% chance to refuse to fight
+            let lose = Phaser.Math.Between(1, 10);
+            console.log(`will it attack? ${lose}`);
+            if(lose > 3) return false;
+            else return true;
         }
+        else return true;
     }
 
     //check exhaustion & hunger

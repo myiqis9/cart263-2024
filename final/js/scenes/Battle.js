@@ -73,7 +73,7 @@ class Battle extends Phaser.Scene {
             if(card == this.active) {
                 //click on active card to attack
                 card.container.on('pointerdown', () => {
-                    if(this.player.canInteract) this.attack();
+                    if(this.player.canInteract) this.checkAtk();
                 });
             }
             else {
@@ -83,6 +83,11 @@ class Battle extends Phaser.Scene {
                 });
             }
         }
+    }
+
+    checkAtk() {
+        if(this.active.isHappy) this.attack();
+        else this.refuse();
     }
 
     attack() {
@@ -137,6 +142,17 @@ class Battle extends Phaser.Scene {
                 }
             ]
         });
+    }
+
+    refuse() {
+        //player can't interact during animations
+        this.player.canInteract = false;
+
+        //remove move count, and set text
+        this.moves--;
+        this.player.text.setText(`${this.active.name.toUpperCase()} IS TOO SCARED. IT REFUSES TO FIGHT!`);
+
+        setTimeout(() => { this.checkMoves(); }, 500);
     }
 
     attacked() {
@@ -298,9 +314,7 @@ class Battle extends Phaser.Scene {
         this.moves = 2; //reset move count for next battle
 
         //remove all card interactions
-        for(let card of this.player.deck) {
-            card.container.off('pointerdown');
-        }
+        this.player.removeInteractions();
 
         //change to shop scene
         setTimeout(() => {
