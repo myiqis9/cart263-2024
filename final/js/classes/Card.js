@@ -65,7 +65,7 @@ class Card {
 
     //checks happiness 
     isHappy() {
-        if(this.joy == 0) {
+        if(this.joy == 0 && this.name !== 'mafu') {
             //has a 70% chance to refuse to fight
             let lose = Phaser.Math.Between(1, 10);
             console.log(`will it attack? ${lose}`);
@@ -90,15 +90,15 @@ class Card {
 
     }
 
+    kasa() {
+
+    }
+
     mafu() {
 
     }
 
     kana() {
-
-    }
-
-    saki() {
 
     }
 }

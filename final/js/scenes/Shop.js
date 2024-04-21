@@ -8,8 +8,8 @@ class Shop extends Phaser.Scene {
         this.btnTxt = [
             ["FEED", "MIN 1 COIN", "FEED YOUR PARTY. FOOD WILL COST 1 COIN PER HUNGER LEVEL FOR EACH PARTY MEMBER."],
             ["REST", "~10 MINUTES", "LEAVE YOUR PARTY TO REST IN ORDER TO RESTORE THEIR ENERGY."],
-            ["UPGRADE", "MIN 1 COIN", "UPGRADE YOUR PARTY"],
-            ["ROLL NEW", "5 COINS", "Button description here"]
+            ["UPGRADE", "MIN 2 COINS", "UPGRADE YOUR PARTY'S HEALTH OR ATTACK STATS. IT WILL ONLY BE ONE OF THE TWO OFFERED."],
+            ["ROLL NEW", "5 COINS", "ROLL A NEW MEMBER TO ADD TO YOUR PARTY!"]
         ];
 
         this.lack = 'YOU LACK THE REQUIRED AMOUNT OF COINS!';
@@ -69,8 +69,7 @@ class Shop extends Phaser.Scene {
         }
 
         //coins amount
-        let cText = this.add.text(this.game.config.width/2, this.game.config.height/2+10, `COINS: ${this.player.coins}`, this.player.param1);
-        cText.setAlpha(0);
+        let cText = this.add.text(this.game.config.width/2, this.game.config.height/2+10, `COINS: ${this.player.coins}`, this.player.param1).setAlpha(0);
         cText.setOrigin(0.5);
         this.buttons.push(cText);
 
@@ -99,7 +98,7 @@ class Shop extends Phaser.Scene {
         //upgrade
         this.buttons[2].on('pointerdown', () => {
             if(this.player.canInteract) {
-                if(this.player.coins > 0) this.upgrade();
+                if(this.player.coins > 1) this.upgrade();
                 else this.player.text.setText(this.lack);
             }
         });

@@ -249,7 +249,7 @@ class Battle extends Phaser.Scene {
     }
 
     enemyDefeated() {
-        this.player.text.setText(`YOU HAVE DEFEATED THE ENEMY!`);
+        this.player.text.setText(`YOU HAVE DEFEATED THE ENEMY! \nYOU'VE GAINED ${this.bounty()} COINS.`);
         this.tweens.add({
             targets: this.enemy.container,
             y: 210,
@@ -257,9 +257,23 @@ class Battle extends Phaser.Scene {
             ease: 'Quintic.easeOut',
             duration: 800,
             onComplete: () => {
-                this.battleComplete();
+                this.cardsLoseStamina();
             }
         });
+    }
+
+    //gain coins at the end of each battle
+    bounty() {
+        let reward;
+
+        switch(this.player.round) {
+            case 0: reward = 0;
+            case 1: case 2: reward = 2;
+            case 3: case 4: reward = 3;
+        }
+        reward += this.enemy.overkill;
+        this.player.coins += reward;
+        return reward;
     }
 
     activeDied() {
@@ -304,6 +318,19 @@ class Battle extends Phaser.Scene {
             }
             else this.lost(); 
         }, 500);
+    }
+
+    //at the end of the battle, all cards lose hunger/energy stats accordingly
+    //then it checks the possibility of them dying from said loss of stats
+    cardsLoseStamina() {
+        for(let card of this.player.deck) {
+            card.hunger -= 2;
+            card.energy -= 2;
+
+            if(card.name === 'emu') card.hunger--; //emu gets hungry faster
+            if(card.name === 'mafu') card.energy--; //mafu gets exhausted faster
+        }
+        this.battleComplete();
     }
 
     battleComplete() {

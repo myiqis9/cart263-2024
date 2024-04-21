@@ -46,8 +46,4 @@ class Enemy {
         }
         this.updateValues();
     }
-
-    die() {
-
-    }
 }

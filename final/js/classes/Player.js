@@ -182,6 +182,7 @@ class Player {
 
     backPressed(sc) {
         this.canInteract = false;
+        this.removeInteractions();
         this.text.setText('');
         sc.UIremove();
 

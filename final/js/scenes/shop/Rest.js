@@ -31,9 +31,9 @@ class Rest extends Phaser.Scene {
         for(let c of this.player.deck) {
             if(c.name === 'mizu') this.base = this.base*2;
             if(c.name === 'kasa') this.base = this.base/2;
-            this.minutes = this.base;
-            console.log(`base: ${this.base}`);
         }
+        this.minutes = this.base;
+        console.log(`base: ${this.base}`);
     }
 
     UIappear() {
