@@ -36,6 +36,7 @@ class Purgatory extends Phaser.Scene {
     deathTrial() {
         this.player.displayCards(this.deathnote);
 
+        //text worded differently depending on how many cards are on death row
         let str;
         if(this.deathnote.length == 1) str = `${this.deathnote[0].name.toUpperCase()} HAS`;
         if(this.deathnote.length == 2) str = `${this.deathnote[0].name.toUpperCase()} AND ${this.deathnote[1].name.toUpperCase()} HAVE`;
@@ -48,12 +49,18 @@ class Purgatory extends Phaser.Scene {
         }, 500);
     }
 
+    //dying animation
     anim() {
-        console.log('anim');
+        //since I dont want it to pointlessly iterate through the array for each tween, but it specifically needs only the container,
+        //Im just throwing these in another temp array idk
+        let anArray = [];
+        for(let d of this.deathnote) anArray.push(d.container);
+
         this.tweens.chain({
-            targets: this.deathnote,
+            targets: anArray,
             tweens: [
                 {
+                    delay: 400,
                     x: '-=5',
                     ease: 'Quintic.easeInOut',
                     duration: 30
@@ -63,7 +70,7 @@ class Purgatory extends Phaser.Scene {
                     yoyo: true,
                     loop: 1,
                     ease: 'Quintic.easeInOut',
-                    duration: 50
+                    duration: 70
                 },
                 {
                     x: '+=5',
@@ -74,7 +81,7 @@ class Purgatory extends Phaser.Scene {
                     delay: 50,
                     y: '+=50',
                     alpha: 0,
-                    duration: 50,
+                    duration: 300,
                     onComplete: () => { this.removeFromDeck(); }
                 }
             ]
@@ -84,6 +91,7 @@ class Purgatory extends Phaser.Scene {
     removeFromDeck() {
         this.player.text.setText(`MAKE SURE TO TAKE GOOD CARE OF YOUR PARTY NEXT TIME. FIGHTING WILL TAKE A TOLL ON THEM.`);
 
+        //remove each card from death list from player deck
         for(let died of this.deathnote) {
             for(let c of this.player.deck) {
                 if(died.name == c.name) {
@@ -96,6 +104,7 @@ class Purgatory extends Phaser.Scene {
 
         this.deathnote = []; //empty death array
 
+        //if player has no more cards left, end here. otherwise go back to shop
         setTimeout(() => {
             if(this.player.deck.length > 0) this.moveToShop();
             else this.player.text.setText(`YOU HAVE NO MORE CARDS TO PLAY! YOU HAVE LOST.`);
