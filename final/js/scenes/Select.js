@@ -106,7 +106,13 @@ class Select extends Phaser.Scene {
         this.player.deck.push(card);
 
         //if its saki, then set hasSaki to true
-        if(card.name === 'saki') this.player.hasSaki = true;
+        //saki also makes all your party forever happy, so set all minimum joy to 1
+        if(card.name === 'saki') {
+            this.player.hasSaki = true;
+            for(let c of this.player.deck) {
+                if(c.joy == 0) c.joy = 1;
+            }
+        }
 
         //more tweening animations
         this.tweens.add({

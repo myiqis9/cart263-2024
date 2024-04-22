@@ -291,13 +291,13 @@ class Battle extends Phaser.Scene {
         switch(this.player.round) {
             case 0: reward = 0;
             break;
-            case 1: reward = 2;
+            case 1: reward = 3;
             break;
-            case 2: reward = 4;
+            case 2: reward = 5;
             break;
-            case 3: reward = 5;
+            case 3: reward = 6;
             break;
-            case 4: reward = 6;
+            case 4: reward = 7;
             break;
         }
         console.log(`reward ${reward} + overkill ${this.enemy.overkill}`);
@@ -398,6 +398,6 @@ class Battle extends Phaser.Scene {
     }
 
     gameWon() {
-        
+
     }
 }
