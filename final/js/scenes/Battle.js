@@ -407,30 +407,13 @@ class Battle extends Phaser.Scene {
         this.player.text.setText(`YOU DID IT! YOU DEFEATED ALL THE FOES WHO STOOD IN YOUR WAY AND YOU WON!!!`);
 
         for(let card of this.player.deck) {
-            //little unhappy animation
-            this.tweens.chain({
-                tweens: [
-                    {
-                        targets: card.container,
-                        x: '+=5',
-                        ease: 'Quintic.easeInOut',
-                        duration: 30
-                    },
-                    {
-                        targets: card.container,
-                        x: '-=15',
-                        ease: 'Quintic.easeInOut',
-                        duration: 50,
-                        yoyo: true,
-                        repeat: 1
-                    },
-                    {
-                        targets: card.container,
-                        x: '-=5',
-                        ease: 'Quintic.easeInOut',
-                        duration: 30
-                    },
-                ]
+            //little happy animation
+            this.tweens.add({
+                targets: card.container,
+                y: '-=40',
+                duration: 80,
+                yoyo: true,
+                loop: 5
             });
         }
     }
