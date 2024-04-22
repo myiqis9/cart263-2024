@@ -378,9 +378,10 @@ class Battle extends Phaser.Scene {
         this.player.removeInteractions();
         this.player.canInteract = false;
 
-        //change to shop scene
+        //check if won the game, otherwise continue to purgatory
         setTimeout(() => {
-            this.scene.start('purgatory', this.player);
+            if(this.player.round == 5) this.gameWon();
+            else this.scene.start('purgatory', this.player);
         }, 300);
     }
 
@@ -394,5 +395,9 @@ class Battle extends Phaser.Scene {
         this.menutxt = `JOY: ${this.active.joy} HUNGER: ${this.active.hunger} ENERGY: ${this.active.energy} \nYOU HAVE ${this.moves} MOVES LEFT.\n\nCLICK ON ACTIVE CARD TO ATTACK OR CLICK ON ANOTHER CARD TO SWAP.`;
 
         this.player.text.setText(this.menutxt);
+    }
+
+    gameWon() {
+        
     }
 }

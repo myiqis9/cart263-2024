@@ -5,7 +5,7 @@ class Rest extends Phaser.Scene {
             key: 'rest'
         });
 
-        this.base = 2;
+        this.base = 5;
         this.minutes = 10;
         this.seconds = 0;
         this.m;
@@ -18,6 +18,7 @@ class Rest extends Phaser.Scene {
     }
 
     create() {
+        this.base = 5; //resets because abilities sometimes mess it up
         this.player.displayCards(this.player.deck);
         this.player.defaultInteractions();
         this.checkAbilities();

@@ -108,7 +108,8 @@ class Card {
         let live = Phaser.Math.Between(1, 10);
         console.log(`${this.name} live: ${live} (>) die: ${die}`);
 
-        if(live > die) return true;
+        if(this.name == 'kana') return true; //kana's ability is resilience, she always survives
+        else if(live > die) return true;
         else return false;
     }
 }

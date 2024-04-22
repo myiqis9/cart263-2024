@@ -10,7 +10,7 @@ class Play extends Phaser.Scene {
         {
             name: 'saki',
             hp: 2,
-            atk: 3, 
+            atk: 4, 
             ability: `YOUR OTHER CARDS WILL ALWAYS RETAIN HAPPINESS AS LONG AS THIS CARD IS ALIVE.`
         },
         {
@@ -40,12 +40,12 @@ class Play extends Phaser.Scene {
         {
             name: 'kana',
             hp: 2,
-            atk: 4, 
+            atk: 5, 
             ability: `EXTREMELY RESILIENT, WILL SURVIVE LOW HUNGER / EXHAUSTION, BUT VERY LOW DEFAULT HEALTH.`
         },
         {
             name: 'mafu',
-            hp: 4,
+            hp: 5,
             atk: 4,
             ability: `CAN KEEP FIGHTING AT LOW HAPPINESS, BUT DRAINS FAST IN EXHAUSTION.`
         },
@@ -66,31 +66,31 @@ class Play extends Phaser.Scene {
             },
             {
                 name: 'dodo',
-                hp: 36,
+                hp: 34,
                 x: 45,
                 y: 64
             },
             {
                 name: 'horse',
-                hp: 40,
+                hp: 38,
                 x: 55,
                 y: 72
             },
             {
                 name: 'clock',
-                hp: 52,
+                hp: 45,
                 x: 65,
                 y: 95
             },
             {
                 name: 'crusher',
-                hp: 61,
+                hp: 55,
                 x: 45,
                 y: 75
             },
             {
                 name: 'mage',
-                hp: 90,
+                hp: 70,
                 x: 45,
                 y: 40
             }

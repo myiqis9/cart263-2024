@@ -51,8 +51,8 @@ class Purgatory extends Phaser.Scene {
 
     //dying animation
     anim() {
-        //since I dont want it to pointlessly iterate through the array for each tween, but it specifically needs only the container,
-        //Im just throwing these in another temp array idk
+        //since I dont want it to pointlessly iterate through the array for each tween, 
+        //but it specifically needs only the container, Im just throwing these in another temp array idk
         let anArray = [];
         for(let d of this.deathnote) anArray.push(d.container);
 
