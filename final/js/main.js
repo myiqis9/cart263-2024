@@ -1,13 +1,15 @@
-/**
-Phaser 3 Jam
+/*
+Final Project
 Viviana Ema Radu
 
-This is a preparation for my final project.
-here's the extra tutorials that mostly helped me and inspired me in my work:
-https://www.emanueleferonato.com/2020/08/20/html5-deck-of-cards-management-updated-to-phaser-3/
-https://www.youtube.com/watch?v=tIaXbRzjyqk 
-https://labs.phaser.io/edit.html?src=src\game%20objects\container\container%20and%20child%20input.js 
-https://labs.phaser.io/edit.html?src=src\tweens\chains\multi%20target%20chain.js 
+This is my final project!
+As shown in my prototype, it's a roguelike card battler. I've expanded to now have a shop,
+unique abilities for almost every card, and card stats you need to take care of so they don't die!
+
+Since I haven't gotten the chance to finish everything I wanted (more about this in Player.js),
+I'm continuing it in this new repository: https://github.com/myiqis9/cart263-2024/tree/main/won_dun 
+
+Otherwise, the game is fairly thorough and pretty hard on its own. Good luck!
 */
 
 "use strict";

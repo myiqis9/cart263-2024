@@ -240,6 +240,6 @@ class Player {
     * as is and can be submitted like this, but since I wanted to commit to characters having special abilities, I really
     * want to try to get these done for my own sake!
     * new repo that will (hopefully) have abilities completed: 
-    * 
+    * https://github.com/myiqis9/cart263-2024/tree/main/won_dun 
     */
 }
