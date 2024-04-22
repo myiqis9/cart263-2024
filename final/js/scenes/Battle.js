@@ -165,6 +165,7 @@ class Battle extends Phaser.Scene {
                     targets: this.active.container,
                     x: '+=30',
                     ease: 'Quintic.easeInOut',
+                    delay: 800,
                     duration: 70,
                     onComplete: () => { this.checkMoves(); }
                 }

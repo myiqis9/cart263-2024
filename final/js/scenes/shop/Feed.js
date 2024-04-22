@@ -71,12 +71,13 @@ class Feed extends Phaser.Scene {
             this.player.coins--;
             this.cText.setText(`COINS: ${this.player.coins}`);
 
-            //little animation
+            //little happy animation
             this.tweens.add({
                 targets: card.container,
                 y: 150,
                 duration: 80,
                 yoyo: true,
+                hold: 20,
                 loop: 1,
                 onComplete: () => { this.player.canInteract = true; }
             });

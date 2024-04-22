@@ -49,33 +49,57 @@ class Purgatory extends Phaser.Scene {
     }
 
     anim() {
+        console.log('anim');
         this.tweens.chain({
             targets: this.deathnote,
             tweens: [
                 {
-                    x: '-=25',
+                    x: '-=5',
+                    ease: 'Quintic.easeInOut',
                     duration: 30
                 },
                 {
-                    x: '+=50',
+                    x: '+=15',
                     yoyo: true,
                     loop: 1,
+                    ease: 'Quintic.easeInOut',
                     duration: 50
                 },
                 {
-                    x: '+=25',
+                    x: '+=5',
+                    ease: 'Quintic.easeInOut',
                     duration: 30
                 },
                 {
-                    duration: 50
-                },
-                {
-                    y: '+=75',
+                    delay: 50,
+                    y: '+=50',
                     alpha: 0,
-                    duration: 50
-                },
+                    duration: 50,
+                    onComplete: () => { this.removeFromDeck(); }
+                }
             ]
         });
+    }
+
+    removeFromDeck() {
+        this.player.text.setText(`MAKE SURE TO TAKE GOOD CARE OF YOUR PARTY NEXT TIME. FIGHTING WILL TAKE A TOLL ON THEM.`);
+
+        for(let died of this.deathnote) {
+            for(let c of this.player.deck) {
+                if(died.name == c.name) {
+                    console.log(`removed ${c.name}`);
+                    c.container.destroy();
+                    this.player.deck.splice(this.player.deck.indexOf(c), 1);
+                }
+            }
+        }
+
+        this.deathnote = []; //empty death array
+
+        setTimeout(() => {
+            if(this.player.deck.length > 0) this.moveToShop();
+            else this.player.text.setText(`YOU HAVE NO MORE CARDS TO PLAY! YOU HAVE LOST.`);
+        }, 1500);
     }
 
     moveToShop() {

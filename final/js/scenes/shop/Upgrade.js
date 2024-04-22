@@ -76,7 +76,7 @@ class Upgrade extends Phaser.Scene {
             //little happy animation
             this.tweens.add({
                 targets: card.container,
-                y: 150,
+                y: '-=40',
                 duration: 80,
                 yoyo: true,
                 loop: 1,
@@ -88,28 +88,27 @@ class Upgrade extends Phaser.Scene {
         else {
             //loses happiness if failed
             if(card.joy > 0) card.lowerJoy(this.player.hasSaki);
-            let tempx = card.container.x;
 
             //little unhappy animation
             this.tweens.chain({
                 tweens: [
                     {
                         targets: card.container,
-                        x: tempx-15,
+                        x: '+=5',
                         ease: 'Quintic.easeInOut',
                         duration: 30
                     },
                     {
                         targets: card.container,
-                        x: tempx+15,
+                        x: '-=15',
                         ease: 'Quintic.easeInOut',
-                        duration: 40,
+                        duration: 50,
                         yoyo: true,
                         repeat: 1
                     },
                     {
                         targets: card.container,
-                        x: tempx,
+                        x: '-=5',
                         ease: 'Quintic.easeInOut',
                         duration: 30
                     },
