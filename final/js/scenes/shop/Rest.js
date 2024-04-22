@@ -28,6 +28,8 @@ class Rest extends Phaser.Scene {
         }, 200);
     }
 
+    //checks card abilities first, as mizu doubles rest time needed and kasa halves it
+    //they cancel each other out if both are present in the party :)
     checkAbilities() {
         for(let c of this.player.deck) {
             if(c.name === 'mizu') this.base = this.base*2;
@@ -48,6 +50,7 @@ class Rest extends Phaser.Scene {
         this.zzz.setOrigin(0.5);
         this.updateTimer();
 
+        //UI fades in
         this.tweens.add({
             targets: [this.timer, this.zzz],
             alpha: 1,

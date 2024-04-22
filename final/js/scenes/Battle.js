@@ -85,11 +85,13 @@ class Battle extends Phaser.Scene {
         }
     }
 
+    //checks card's joy first, as it has a chance to refuse to attack
     checkAtk() {
         if(this.active.isHappy()) this.attack();
         else this.refuse();
     }
 
+    //active attacks enemy
     attack() {
         console.log('player attacking!');
 
@@ -110,7 +112,6 @@ class Battle extends Phaser.Scene {
                     duration: 70,
                     onComplete: () => { 
                         this.enemy.takeDamage(this.active.atk);
-                        if(this.active.name == 'rui') this.player.rui();
                     }
                 },
                 {
@@ -147,6 +148,7 @@ class Battle extends Phaser.Scene {
         });
     }
 
+    //card refuses to fight
     refuse() {
         //player can't interact during animations
         this.player.canInteract = false;
@@ -226,17 +228,20 @@ class Battle extends Phaser.Scene {
         });
     }
 
+    //check if player has moves left in their turn, otherwise it's the enemy's turn to attack
     checkMoves() {
         if(this.moves > 0) this.reset();
         else this.attacked(); 
     }
 
+    //reset interaction & text
     reset() {
         //player can interact again now
         this.updateText();
         this.player.canInteract = true;
     }
 
+    //swap active card
     swap(card) {
         this.player.text.setText(`ENOUGH, ${this.active.name.toUpperCase()}! COME FORTH, ${card.name.toUpperCase()}!`);
         this.player.canInteract = false;
@@ -269,6 +274,7 @@ class Battle extends Phaser.Scene {
         }, 500);
     }
 
+    //enemy death animation
     enemyDefeated() {
         this.player.text.setText(`YOU HAVE DEFEATED THE ENEMY! \nYOU'VE GAINED ${this.bounty()} COINS.`);
         this.tweens.add({
@@ -398,6 +404,34 @@ class Battle extends Phaser.Scene {
     }
 
     gameWon() {
+        this.player.text.setText(`YOU DID IT! YOU DEFEATED ALL THE FOES WHO STOOD IN YOUR WAY AND YOU WON!!!`);
 
+        for(let card of this.player.deck) {
+            //little unhappy animation
+            this.tweens.chain({
+                tweens: [
+                    {
+                        targets: card.container,
+                        x: '+=5',
+                        ease: 'Quintic.easeInOut',
+                        duration: 30
+                    },
+                    {
+                        targets: card.container,
+                        x: '-=15',
+                        ease: 'Quintic.easeInOut',
+                        duration: 50,
+                        yoyo: true,
+                        repeat: 1
+                    },
+                    {
+                        targets: card.container,
+                        x: '-=5',
+                        ease: 'Quintic.easeInOut',
+                        duration: 30
+                    },
+                ]
+            });
+        }
     }
 }

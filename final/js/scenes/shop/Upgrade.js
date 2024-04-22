@@ -41,6 +41,7 @@ class Upgrade extends Phaser.Scene {
         this.cText.setOrigin(0.5);
         this.upText.setOrigin(0.5);
 
+        //UI fades in
         this.tweens.add({
             targets: [this.cText, this.upText],
             alpha: 1,
@@ -48,6 +49,7 @@ class Upgrade extends Phaser.Scene {
             onComplete: () => { this.player.canInteract = true; }
         });
 
+        //card interactivity
         for(let card of this.player.deck) {
             card.container.on('pointerdown', () => {
                 if(this.player.coins > 0) this.canUpgrade(card);
@@ -56,6 +58,7 @@ class Upgrade extends Phaser.Scene {
         }
     }
 
+    //checks extra aspects that might make a card unable to upgrade, such as being maxed or low on joy
     canUpgrade(card) {
         if(card.joy == 0) this.player.text.setText(`THIS CARD IS TOO UNHAPPY. IT REFUSES THE UPGRADE.`);
         else if(this.up == 'ATK' && card.atk == 9 || this.up == 'HP' && card.hp == 9)
@@ -63,6 +66,7 @@ class Upgrade extends Phaser.Scene {
         else this.upgrading(card);
     }
 
+    //card gets upgraded here
     upgrading(card) {
         //it costs a coin no matter if it succeeds or fails
         this.player.coins--;
