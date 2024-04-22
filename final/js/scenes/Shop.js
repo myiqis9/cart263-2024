@@ -8,7 +8,7 @@ class Shop extends Phaser.Scene {
         this.btnTxt = [
             ["FEED", "MIN 1 COIN", "FEED YOUR PARTY. FOOD WILL COST 1 COIN PER HUNGER LEVEL FOR EACH PARTY MEMBER."],
             ["REST", "~10 MINUTES", "LEAVE YOUR PARTY TO REST IN ORDER TO RESTORE THEIR ENERGY."],
-            ["UPGRADE", "MIN 2 COINS", "UPGRADE YOUR PARTY'S HEALTH OR ATTACK STATS. IT WILL ONLY BE ONE OF THE TWO OFFERED."],
+            ["UPGRADE", "MIN 1 COIN", "UPGRADE YOUR PARTY'S HEALTH OR ATTACK STATS. IT WILL ONLY BE ONE OF THE TWO OFFERED."],
             ["ROLL NEW", "5 COINS", "ROLL A NEW MEMBER TO ADD TO YOUR PARTY!"]
         ];
 
@@ -98,7 +98,7 @@ class Shop extends Phaser.Scene {
         //upgrade
         this.buttons[2].on('pointerdown', () => {
             if(this.player.canInteract) {
-                if(this.player.coins > 1) this.upgrade();
+                if(this.player.coins > 0) this.upgrade();
                 else this.player.text.setText(this.lack);
             }
         });

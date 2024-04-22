@@ -86,7 +86,7 @@ class Battle extends Phaser.Scene {
     }
 
     checkAtk() {
-        if(this.active.isHappy) this.attack();
+        if(this.active.isHappy()) this.attack();
         else this.refuse();
     }
 
@@ -106,19 +106,19 @@ class Battle extends Phaser.Scene {
             tweens: [
                 {
                     targets: this.active.container,
-                    x: this.game.config.width/2-136,
+                    x: '+=30',
                     duration: 70,
                     onComplete: () => { this.enemy.takeDamage(this.active.atk) }
                 },
                 {
                     targets: this.enemy.container,
-                    x: this.game.config.width/2+95,
+                    x: '-=5',
                     ease: 'Quintic.easeInOut',
                     duration: 30
                 },
                 {
                     targets: this.enemy.container,
-                    x: this.game.config.width/2+115,
+                    x: '+=20',
                     ease: 'Quintic.easeInOut',
                     duration: 70, 
                     yoyo: true,
@@ -126,13 +126,13 @@ class Battle extends Phaser.Scene {
                 },
                 {
                     targets: this.enemy.container,
-                    x: this.game.config.width/2+100,
+                    x: '+=5',
                     ease: 'Quintic.easeInOut',
                     duration: 30
                 },
                 {
                     targets: this.active.container,
-                    x: this.game.config.width/2-156,
+                    x: '-=30',
                     duration: 100,
                     onComplete: () => {
                         //if enemy died then go to win scenario, else enemy attacks back
@@ -156,19 +156,14 @@ class Battle extends Phaser.Scene {
         this.tweens.chain({
             tweens: [
                 {
-                    targets: this.enemy.container,
-                    x: this.game.config.width/2-220,
-                    duration: 70
-                },
-                {
                     targets: this.active.container,
-                    x: this.game.config.width/2-220,
+                    x: '-=30',
                     ease: 'Quintic.easeInOut',
                     duration: 90
                 },
                 {
                     targets: this.active.container,
-                    x: this.game.config.width/2-156,
+                    x: '+=30',
                     ease: 'Quintic.easeInOut',
                     duration: 70,
                     onComplete: () => { this.checkMoves(); }
@@ -186,19 +181,19 @@ class Battle extends Phaser.Scene {
             tweens: [
                 {
                     targets: this.enemy.container,
-                    x: this.game.config.width/2+85,
+                    x: '-=25',
                     duration: 70,
                     onComplete: () => { this.active.takeDamage(this.player) }
                 },
                 {
                     targets: this.active.container,
-                    x: this.game.config.width/2-151,
+                    x: '-=5',
                     ease: 'Quintic.easeInOut',
                     duration: 30
                 },
                 {
                     targets: this.active.container,
-                    x: this.game.config.width/2-171,
+                    x: '+=15',
                     ease: 'Quintic.easeInOut',
                     duration: 70, 
                     yoyo: true,
@@ -206,13 +201,13 @@ class Battle extends Phaser.Scene {
                 },
                 {
                     targets: this.active.container,
-                    x: this.game.config.width/2-156,
+                    x: '+=5',
                     ease: 'Quintic.easeInOut',
                     duration: 30
                 },
                 {
                     targets: this.enemy.container,
-                    x: this.game.config.width/2+100,
+                    x: '+=25',
                     duration: 100,
                     onComplete: () => {
                         //if active card died then call function, else reset new turn
@@ -377,11 +372,12 @@ class Battle extends Phaser.Scene {
 
         //remove all card interactions
         this.player.removeInteractions();
+        this.player.canInteract = false;
 
         //change to shop scene
         setTimeout(() => {
-            this.scene.start('shop', this.player);
-        }, 800);
+            this.scene.start('purgatory', this.player);
+        }, 300);
     }
 
     lost() {

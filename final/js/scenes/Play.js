@@ -90,7 +90,7 @@ class Play extends Phaser.Scene {
             },
             {
                 name: 'mage',
-                hp: 75,
+                hp: 90,
                 x: 45,
                 y: 40
             }

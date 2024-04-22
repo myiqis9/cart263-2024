@@ -59,9 +59,7 @@ class Card {
         switch(player.round) {
             case 0: case 1: dmg = 1;
             break;
-            case 2: case 3: case 4: dmg = 2;
-            break;
-            case 5: dmg = 3;
+            case 2: case 3: case 4: case 5: dmg = 2;
             break;
         }
 
@@ -100,8 +98,18 @@ class Card {
     }
 
     //check exhaustion & hunger
-    isFedRested() {
+    //if a card is at 0 hunger or 0 exhaustion, it was a 50% chance of dying at the end of each battle.
+    //if both stats are at 0, it becomes a 90% chance!
+    willLive() {
+        let die = 0;
+        if(this.hunger == 0 && this.energy == 0) die = 9;
+        else if(this.hunger == 0 || this.energy == 0) die = 5;
 
+        let live = Phaser.Math.Between(1, 10);
+        console.log(`${this.name} live: ${live} (>) die: ${die}`);
+
+        if(live > die) return true;
+        else return false;
     }
 
     //individual skills and special events for each card will be contained here

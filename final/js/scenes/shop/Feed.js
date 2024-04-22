@@ -14,7 +14,7 @@ class Feed extends Phaser.Scene {
     }
 
     create() {
-        this.player.displayDeck();
+        this.player.displayCards(this.player.deck);
         this.player.defaultInteractions();
         this.checkAbilities();
 

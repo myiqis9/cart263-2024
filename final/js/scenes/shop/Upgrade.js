@@ -14,7 +14,7 @@ class Upgrade extends Phaser.Scene {
     }
 
     create() {
-        this.player.displayDeck();
+        this.player.displayCards(this.player.deck);
         this.player.defaultInteractions();
         this.flipCoin();
 
@@ -50,7 +50,7 @@ class Upgrade extends Phaser.Scene {
 
         for(let card of this.player.deck) {
             card.container.on('pointerdown', () => {
-                if(this.player.coins > 1) this.canUpgrade(card);
+                if(this.player.coins > 0) this.canUpgrade(card);
                 else this.player.text.setText(`SORRY, YOU'RE OUT OF COINS!`);
             });
         }
@@ -64,8 +64,8 @@ class Upgrade extends Phaser.Scene {
     }
 
     upgrading(card) {
-        //it costs two coins no matter if it succeeds or fails
-        this.player.coins -= 2;
+        //it costs a coin no matter if it succeeds or fails
+        this.player.coins--;
         this.player.canInteract = false;
 
         if(this.success()) {

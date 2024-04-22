@@ -18,7 +18,7 @@ class Rest extends Phaser.Scene {
     }
 
     create() {
-        this.player.displayDeck();
+        this.player.displayCards(this.player.deck);
         this.player.defaultInteractions();
         this.checkAbilities();
 
@@ -38,7 +38,7 @@ class Rest extends Phaser.Scene {
 
     UIappear() {
         this.player.backToShop(this);
-        this.player.text.setText('SHH! YOUR CARDS ARE RESTING. COME CHECK ON THEM LATER!');
+        this.player.text.setText('SHH! \nYOUR CARDS ARE RESTING. COME CHECK ON THEM LATER!');
 
         //text displayed on the screen
         this.timer = this.add.text(this.game.config.width/2, this.game.config.height/2+10, `00:00`, this.player.param1).setAlpha(0);

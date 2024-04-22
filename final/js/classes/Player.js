@@ -91,16 +91,17 @@ class Player {
 
     //for feed, upgrade and rest scenes, cards get displayed evenly differently in the middle
     //depending on how many cards are in your deck
-    displayDeck() {
+    //for exhaustion/hunger death, this only displays the cards about to die
+    displayCards(deck) {
         let xPoint = 0;
         
         //determine where first card would display (x) depending on amount of cards
-        if(this.deck.length == 1) xPoint = this.scene.game.config.width/2;
-        if(this.deck.length == 2) xPoint = this.scene.game.config.width/2-75;
-        if(this.deck.length == 3) xPoint = this.scene.game.config.width/2-150;
+        if(deck.length == 1) xPoint = this.scene.game.config.width/2;
+        if(deck.length == 2) xPoint = this.scene.game.config.width/2-75;
+        if(deck.length == 3) xPoint = this.scene.game.config.width/2-150;
 
         //place cards in center
-        for(let card of this.deck) {
+        for(let card of deck) {
             this.scene.tweens.add({
                 targets: card.container,
                     x: xPoint,
