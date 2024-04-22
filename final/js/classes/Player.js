@@ -211,4 +211,17 @@ class Player {
             sc.scene.start('shop', sc.player);
         }, 400);
     }
+
+    //individual skills and special events for each card will be contained here
+    emu() {
+        
+    }
+
+    rui() {
+        
+    }
+
+    kasa() {
+
+    }
 }

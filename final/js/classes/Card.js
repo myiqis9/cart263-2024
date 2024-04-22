@@ -111,17 +111,4 @@ class Card {
         if(live > die) return true;
         else return false;
     }
-
-    //individual skills and special events for each card will be contained here
-    emu() {
-        
-    }
-
-    rui() {
-
-    }
-
-    kasa() {
-
-    }
 }

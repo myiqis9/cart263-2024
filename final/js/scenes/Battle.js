@@ -108,7 +108,10 @@ class Battle extends Phaser.Scene {
                     targets: this.active.container,
                     x: '+=30',
                     duration: 70,
-                    onComplete: () => { this.enemy.takeDamage(this.active.atk) }
+                    onComplete: () => { 
+                        this.enemy.takeDamage(this.active.atk);
+                        if(this.active.name == 'rui') this.player.rui();
+                    }
                 },
                 {
                     targets: this.enemy.container,
