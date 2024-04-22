@@ -212,16 +212,34 @@ class Player {
         }, 400);
     }
 
-    //individual skills and special events for each card will be contained here
+    //individual skills and special events for each card 
+    //will be contained down below!!!!!
+
+    //after the battle, if she is at 0 hunger, she will instead kill and 'eat' another party member
+    //(if there are other party members). this raises her hunger back to 5 :)
     emu() {
-        
+        //WILL NOT HAVE TIME. all the specific card events are just very time consuming and this
+        //would have to be called separately for each post-battle. it would be doable if I had better
+        //time management... (utopian world)
     }
 
+    //has a 30% chance to also cause damage a random party member every time it attacks
     rui() {
-        
+        //WILL NOT HAVE TIME. this would be complicated to implement within the time frame because
+        //it means cards can die mid-battle which would need a lot to account for
     }
 
+    //at any point where it reaches 0 happiness, it will just die
     kasa() {
-
+        //WILL NOT HAVE TIME. this one is mostly time consuming because there's so many 
+        //places where it can be called (mid-battle, upgrade, rest)
     }
+
+    /*
+    * I will continue working on the game past deadline in a separate repository. I think the game is pretty intricate
+    * as is and can be submitted like this, but since I wanted to commit to characters having special abilities, I really
+    * want to try to get these done for my own sake!
+    * new repo that will (hopefully) have abilities completed: 
+    * 
+    */
 }
