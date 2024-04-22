@@ -291,7 +291,7 @@ class Battle extends Phaser.Scene {
 
     //gain coins at the end of each battle
     bounty() {
-        let reward;
+        let reward = 0;
 
         //gain set amount of coins each round. overkill dmg transfers into bonus coins
         switch(this.player.round) {
@@ -405,10 +405,12 @@ class Battle extends Phaser.Scene {
 
     gameWon() {
         this.player.text.setText(`YOU DID IT! YOU DEFEATED ALL THE FOES WHO STOOD IN YOUR WAY AND YOU WON!!!`);
+        this.player.displayCards(this.player.deck);
 
         for(let card of this.player.deck) {
             //little happy animation
             this.tweens.add({
+                delay: 300,
                 targets: card.container,
                 y: '-=40',
                 duration: 80,
